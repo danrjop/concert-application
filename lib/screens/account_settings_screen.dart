@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../services/user_profile_service.dart';
+import 'change_email_screen.dart';
+import 'change_password_screen.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -49,7 +51,12 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             subtitle: Text(userProfile?.email ?? 'user@example.com'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              _showEmailChangeDialog(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChangeEmailScreen(),
+                ),
+              );
             },
           ),
           ListTile(
@@ -57,7 +64,12 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             title: const Text('Change Password'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              _showPasswordChangeDialog(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChangePasswordScreen(),
+                ),
+              );
             },
           ),
           const Divider(),
@@ -181,115 +193,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     );
   }
 
-  // Dialog for changing email
-  void _showEmailChangeDialog(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Change Email Address'),
-          content: TextField(
-            controller: emailController,
-            decoration: const InputDecoration(
-              labelText: 'New Email Address',
-              hintText: 'Enter your new email',
-            ),
-            keyboardType: TextInputType.emailAddress,
-            autofocus: true,
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            TextButton(
-              child: const Text('SAVE'),
-              onPressed: () {
-                // TODO: Implement email change logic
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Email updated to: ${emailController.text}')),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // Dialog for changing password
-  void _showPasswordChangeDialog(BuildContext context) {
-    final TextEditingController currentPasswordController = TextEditingController();
-    final TextEditingController newPasswordController = TextEditingController();
-    final TextEditingController confirmPasswordController = TextEditingController();
-    
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Change Password'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: currentPasswordController,
-                decoration: const InputDecoration(
-                  labelText: 'Current Password',
-                ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: newPasswordController,
-                decoration: const InputDecoration(
-                  labelText: 'New Password',
-                ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: confirmPasswordController,
-                decoration: const InputDecoration(
-                  labelText: 'Confirm New Password',
-                ),
-                obscureText: true,
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            TextButton(
-              child: const Text('SAVE'),
-              onPressed: () {
-                // Check if passwords match
-                if (newPasswordController.text != confirmPasswordController.text) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Passwords do not match')),
-                  );
-                  return;
-                }
-                
-                // TODO: Implement password change logic
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Password updated successfully')),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   // Dialog for selecting language
   void _showLanguageSelectionDialog(BuildContext context) {
