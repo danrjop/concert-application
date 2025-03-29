@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
+import '../widgets/app_drawer.dart';
+import 'main_navigation_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -38,18 +40,14 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               // TODO: Implement add functionality
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.menu_outlined),
-            onPressed: () {
-              // TODO: Implement menu functionality
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              Provider.of<AuthService>(context, listen: false).signOut()
-                .then((_) => Navigator.pushReplacementNamed(context, '/login'));
-            },
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu_outlined),
+              onPressed: () {
+                final mainNavState = context.findAncestorStateOfType<MainNavigationScreenState>();
+                mainNavState?.openSidebar();
+              },
+            ),
           ),
         ],
       ),

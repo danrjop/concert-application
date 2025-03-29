@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'index.dart';
+import '../widgets/app_drawer.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -10,6 +11,7 @@ class MainNavigationScreen extends StatefulWidget {
 
 class MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Main Navigation Screens
   final List<Widget> _screens = [
@@ -26,9 +28,15 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
     });
   }
 
+  void openSidebar() {
+    _scaffoldKey.currentState?.openEndDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      endDrawer: AppDrawer(currentIndex: _selectedIndex),
       body: _screens[_selectedIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(

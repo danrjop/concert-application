@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/post_card.dart';
+import '../widgets/app_drawer.dart';
 import 'main_navigation_screen.dart';
 import 'search_screen.dart';
 
@@ -21,9 +22,14 @@ class HomeScreen extends StatelessWidget {
             icon: const Icon(Icons.add_box_outlined),
             onPressed: () {},
           ),
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {},
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                final mainNavState = context.findAncestorStateOfType<MainNavigationScreenState>();
+                mainNavState?.openSidebar();
+              },
+            ),
           ),
         ],
       ),
