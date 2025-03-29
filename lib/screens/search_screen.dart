@@ -229,34 +229,18 @@ class _SearchScreenState extends State<SearchScreen> {
                   'Recent Searches',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        // Clear all recent searches
-                        setState(() {
-                          if (_isSearchingConcerts) {
-                            _recentConcertSearches = [];
-                          } else {
-                            _recentPeopleSearches = [];
-                          }
-                        });
-                      },
-                      child: const Text('Clear All'),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () {
-                        // Close the recent searches overlay
-                        // Using just setState to avoid Navigator issues
-                        if (mounted) {
-                          setState(() {
-                            _showRecentSearches = false;
-                          });
-                        }
-                      },
-                    ),
-                  ],
+                TextButton(
+                  onPressed: () {
+                    // Clear all recent searches
+                    setState(() {
+                      if (_isSearchingConcerts) {
+                        _recentConcertSearches = [];
+                      } else {
+                        _recentPeopleSearches = [];
+                      }
+                    });
+                  },
+                  child: const Text('Clear All'),
                 ),
               ],
             ),
@@ -340,7 +324,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    // LOGO and Close Button
+                    // LOGO and close button (only shown when search overlay is active)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -351,20 +335,15 @@ class _SearchScreenState extends State<SearchScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            // Make sure we're not showing the search overlay
-                            if (_showRecentSearches) {
+                        if (_showRecentSearches)
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
                               setState(() {
                                 _showRecentSearches = false;
                               });
-                            } else {
-                              // Only pop if we're not showing the search overlay
-                              Navigator.of(context).pop();
-                            }
-                          },
-                        ),
+                            },
+                          ),
                       ],
                     ),
                     

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/post_card.dart';
+import 'main_navigation_screen.dart';
 import 'search_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -33,10 +34,14 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: InkWell(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SearchScreen()),
-                );
+                // Instead of pushing a new screen, we'll switch to the search tab
+                // Get the MainNavigationScreen state and update the selected index
+                final MainNavigationScreenState? mainNavState = 
+                    context.findAncestorStateOfType<MainNavigationScreenState>();
+                    
+                if (mainNavState != null) {
+                  mainNavState.onItemTapped(1); // 1 is the index for search tab
+                }
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
