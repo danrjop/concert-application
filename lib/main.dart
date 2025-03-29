@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'screens/index.dart';
 import 'constants/app_constants.dart';
 import 'services/auth_service.dart';
+import 'services/user_profile_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +22,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
       create: (_) => AuthService(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserProfileService(),
+        ),
+      ],
       child: Consumer<AuthService>(
         builder: (context, authService, _) {
           return MaterialApp(
@@ -38,11 +46,14 @@ class MyApp extends StatelessWidget {
                 titleTextStyle: TextStyle(color: AppConstants.textColor, fontWeight: FontWeight.bold, fontSize: 20),
               ),
             ),
+            debugShowCheckedModeBanner: false,
             initialRoute: authService.status == AuthStatus.authenticated ? '/home' : '/signup',
             routes: {
               '/signup': (context) => const SignupScreen(),
               '/login': (context) => const LoginScreen(),
               '/home': (context) => const MainNavigationScreen(),
+              '/edit_profile': (context) => const EditProfileScreen(),
+              '/account_settings': (context) => const AccountSettingsScreen(),
             },
           );
         },
