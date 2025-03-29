@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/user_profile_service.dart';
-import '../models/user_profile.dart';
 import '../utils/image_helper.dart';
 import 'settings/account_information_screen.dart';
 import 'edit_name_screen.dart';

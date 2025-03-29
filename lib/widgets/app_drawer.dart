@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../services/user_profile_service.dart';
-import '../models/user_profile.dart';
 import '../screens/main_navigation_screen.dart';
 import '../screens/edit_profile_screen.dart';
 import '../screens/settings_screen.dart';

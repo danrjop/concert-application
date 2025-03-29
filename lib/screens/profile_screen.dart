@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/auth_service.dart';
 import '../services/user_profile_service.dart';
-import '../models/user_profile.dart';
-import '../widgets/app_drawer.dart';
 import 'edit_profile_screen.dart';
 import 'main_navigation_screen.dart';
-import 'memories_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

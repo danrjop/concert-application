@@ -235,9 +235,9 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
                                 // Apply the filters and close the sheet
                                 this.setState(() {
                                   // Update main screen state with these filter values
-                                  this._selectedCity = _selectedCity;
-                                  this._selectedGenre = _selectedGenre;
-                                  this._isOpenNow = _isOpenNow;
+                                  _selectedCity = _selectedCity;
+                                  _selectedGenre = _selectedGenre;
+                                  _isOpenNow = _isOpenNow;
                                 });
                                 Navigator.pop(context);
                               },

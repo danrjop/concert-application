@@ -16,7 +16,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   bool _notificationsEnabled = true;
   bool _darkModeEnabled = false;
   String _selectedLanguage = 'English';
-  List<String> _languages = ['English', 'Spanish', 'French', 'German', 'Japanese'];
+  final List<String> _languages = ['English', 'Spanish', 'French', 'German', 'Japanese'];
 
   @override
   Widget build(BuildContext context) {

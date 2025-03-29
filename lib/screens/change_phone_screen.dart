@@ -11,7 +11,7 @@ class ChangePhoneScreen extends StatefulWidget {
 class _ChangePhoneScreenState extends State<ChangePhoneScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String _currentPhone = '+1 (555) 123-4567';
+  final String _currentPhone = '+1 (555) 123-4567';
   bool _isVerifying = false;
   String? _verificationCode;
   
