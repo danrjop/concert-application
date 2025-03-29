@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/segmented_tab_control.dart';
+import '../constants/app_constants.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -8,8 +8,8 @@ class SearchScreen extends StatefulWidget {
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
-  bool _isSearchingConcerts = true;
+class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   bool _showRecentSearches = false;
   
@@ -31,10 +31,26 @@ class _SearchScreenState extends State<SearchScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        setState(() {
+          _showRecentSearches = false;
+        });
+      }
+    });
+  }
+
+  @override
   void dispose() {
+    _tabController.dispose();
     _searchController.dispose();
     super.dispose();
   }
+
+  bool get _isSearchingConcerts => _tabController.index == 0;
 
   Widget _buildConcertResults() {
     // Categories to display - some are standard, others could be personalized
@@ -349,17 +365,24 @@ class _SearchScreenState extends State<SearchScreen> {
                     
                     const SizedBox(height: 16),
                     
-                    // Tab Control for switching between concerts and people
-                    SegmentedTabControl(
-                      isFirstTabSelected: _isSearchingConcerts,
-                      firstTabLabel: 'Concerts',
-                      secondTabLabel: 'People',
-                      onTabChanged: (isFirstTab) {
-                        setState(() {
-                          _isSearchingConcerts = isFirstTab;
-                          _showRecentSearches = false;
-                        });
-                      },
+                    // Tab Bar for switching between concerts and people (using Flutter's TabBar)
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey, width: 0.5),
+                        ),
+                      ),
+                      child: TabBar(
+                        controller: _tabController,
+                        labelColor: AppConstants.primaryColor,
+                        unselectedLabelColor: Colors.grey,
+                        indicatorColor: AppConstants.primaryColor,
+                        indicatorWeight: 2,
+                        tabs: const [
+                          Tab(text: 'Concerts'),
+                          Tab(text: 'People'),
+                        ],
+                      ),
                     ),
                     
                     const SizedBox(height: 16),
@@ -458,9 +481,13 @@ class _SearchScreenState extends State<SearchScreen> {
               Expanded(
                 child: _showRecentSearches
                     ? _buildRecentSearchesOverlay()
-                    : _isSearchingConcerts
-                        ? _buildConcertResults()
-                        : _buildPeopleResults(),
+                    : TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildConcertResults(),
+                          _buildPeopleResults(),
+                        ],
+                      ),
               ),
             ],
           ),
