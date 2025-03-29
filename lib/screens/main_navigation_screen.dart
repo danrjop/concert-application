@@ -30,37 +30,50 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            backgroundColor: Colors.blueGrey,
-            label: 'Home',
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          // Add a top border or shadow for iOS style appearance
+          border: Border(
+            top: BorderSide(color: Colors.grey.shade300, width: 0.5),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            backgroundColor: Colors.blueGrey,
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.record_voice_over),
-            backgroundColor: Colors.blueGrey,
-            label: 'Record',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.photo),
-            backgroundColor: Colors.blueGrey,
-            label: 'Memories',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            backgroundColor: Colors.blueGrey,
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueGrey,
-        onTap: _onItemTapped,
+        ),
+        child: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search_outlined),
+              activeIcon: Icon(Icons.search),
+              label: 'Search',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_circle_outline),
+              activeIcon: Icon(Icons.add_circle),
+              label: 'Record',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.photo_outlined),
+              activeIcon: Icon(Icons.photo),
+              label: 'Memories',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Theme.of(context).primaryColor,
+          unselectedItemColor: Colors.grey,
+          showUnselectedLabels: true,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/segmented_tab_control.dart';
+import 'package:provider/provider.dart';
+import '../services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -8,9 +9,21 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  // State variable for tab selection
-  bool isRecentActivitySelected = true;
+class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
+  // Tab controller
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +42,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             icon: const Icon(Icons.menu_outlined),
             onPressed: () {
               // TODO: Implement menu functionality
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Provider.of<AuthService>(context, listen: false).signOut()
+                .then((_) => Navigator.pushReplacementNamed(context, '/login'));
             },
           ),
         ],
@@ -165,41 +185,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Divider
           const Divider(height: 1, thickness: 1),
           
-          // Tab switch navigation between Recent Activity and Taste Profile
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          // TabBar and TabBarView for Recent Activity and Taste Profile
+          Expanded(
             child: Column(
               children: [
-                // Segmented control for tab switching
-                SegmentedTabControl(
-                  isFirstTabSelected: isRecentActivitySelected,
-                  firstTabLabel: 'Recent Activity',
-                  secondTabLabel: 'Taste Profile',
-                  onTabChanged: (isFirstTab) {
-                    setState(() {
-                      isRecentActivitySelected = isFirstTab;
-                    });
-                  },
+                // Tab Bar
+                TabBar(
+                  controller: _tabController,
+                  labelColor: Colors.black,
+                  indicatorColor: Colors.black,
+                  tabs: const [
+                    Tab(text: 'Recent Activity'),
+                    Tab(text: 'Taste Profile'),
+                  ],
                 ),
                 
-                // Content area that changes based on selected tab
-                Container(
-                  height: 200, // Adjust height as needed
-                  margin: const EdgeInsets.only(top: 16),
-                  child: isRecentActivitySelected
-                      ? const Center(
-                          child: Text('Recent Activity Content'),
-                        )
-                      : const Center(
-                          child: Text('Taste Profile Content'),
-                        ),
+                // Tab Bar View - Content area
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: const [
+                      // Recent Activity Tab Content
+                      Center(
+                        child: Text('Recent Activity Content'),
+                      ),
+                      // Taste Profile Tab Content
+                      Center(
+                        child: Text('Taste Profile Content'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
           
-          // Spacer to push the home indicator to the bottom
-          const Spacer(),
+          // No spacer needed since we're using Expanded
           
           // Home indicator
           Padding(

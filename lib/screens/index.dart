@@ -5,3 +5,7 @@ export 'record_screen.dart';
 export 'memories_screen.dart';
 export 'profile_screen.dart';
 export 'main_navigation_screen.dart';
+
+// Auth screens
+export 'auth/login_screen.dart';
+export 'auth/signup_screen.dart';
