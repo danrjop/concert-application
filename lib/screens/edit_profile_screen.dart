@@ -4,6 +4,9 @@ import '../services/user_profile_service.dart';
 import '../models/user_profile.dart';
 import '../utils/image_helper.dart';
 import 'account_settings_screen.dart';
+import 'edit_name_screen.dart';
+import 'edit_username_screen.dart';
+import 'edit_bio_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -109,21 +112,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           // Display Name Section
           _buildEditOption(
             context: context,
-            title: 'Edit Display Name',
+            title: 'Edit Name',
             icon: Icons.edit,
             onTap: () {
-              _showTextInputDialog(
-                context: context,
-                title: 'Edit Display Name',
-                fieldLabel: 'Display Name',
-                initialValue: userProfile?.displayName ?? 'Display Name',
-                onSave: (value) {
-                  userProfileService.updateDisplayName(value);
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Display name updated to: $value')),
-                  );
-                },
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EditNameScreen(),
+                ),
               );
             },
           ),
@@ -136,18 +132,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             title: 'Edit Username',
             icon: Icons.alternate_email,
             onTap: () {
-              _showTextInputDialog(
-                context: context,
-                title: 'Edit Username',
-                fieldLabel: 'Username',
-                initialValue: userProfile?.username ?? 'UserName',
-                onSave: (value) {
-                  userProfileService.updateUsername(value);
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Username updated to: $value')),
-                  );
-                },
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EditUsernameScreen(),
+                ),
               );
             },
           ),
@@ -160,16 +149,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             title: 'Edit Bio',
             icon: Icons.description,
             onTap: () {
-              _showBioInputDialog(
-                context: context,
-                initialValue: userProfile?.bio ?? '',
-                onSave: (value) {
-                  userProfileService.updateBio(value);
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Bio updated')),
-                  );
-                },
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EditBioScreen(),
+                ),
               );
             },
           ),
@@ -299,86 +283,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
             ],
           ),
-        );
-      },
-    );
-  }
-
-  void _showTextInputDialog({
-    required BuildContext context,
-    required String title,
-    required String fieldLabel,
-    required String initialValue,
-    required Function(String) onSave,
-  }) {
-    final TextEditingController controller = TextEditingController(text: initialValue);
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              labelText: fieldLabel,
-            ),
-            autofocus: true,
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            TextButton(
-              child: const Text('SAVE'),
-              onPressed: () {
-                onSave(controller.text);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showBioInputDialog({
-    required BuildContext context,
-    required String initialValue,
-    required Function(String) onSave,
-  }) {
-    final TextEditingController controller = TextEditingController(text: initialValue);
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Edit Bio'),
-          content: TextField(
-            controller: controller,
-            decoration: const InputDecoration(
-              labelText: 'Bio',
-              hintText: 'Tell others about yourself...',
-            ),
-            maxLines: 5,
-            autofocus: true,
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            TextButton(
-              child: const Text('SAVE'),
-              onPressed: () {
-                onSave(controller.text);
-              },
-            ),
-          ],
         );
       },
     );

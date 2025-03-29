@@ -54,6 +54,9 @@ class MyApp extends StatelessWidget {
               '/home': (context) => const MainNavigationScreen(),
               '/edit_profile': (context) => const EditProfileScreen(),
               '/account_settings': (context) => const AccountSettingsScreen(),
+              '/edit_name': (context) => const EditNameScreen(),
+              '/edit_username': (context) => const EditUsernameScreen(),
+              '/edit_bio': (context) => const EditBioScreen(),
             },
           );
         },
