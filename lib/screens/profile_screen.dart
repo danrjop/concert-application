@@ -6,6 +6,7 @@ import '../models/user_profile.dart';
 import '../widgets/app_drawer.dart';
 import 'edit_profile_screen.dart';
 import 'main_navigation_screen.dart';
+import 'memories_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -200,7 +201,10 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             title: const Text('Been'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              // TODO: Navigate to Been page
+              final mainNavState = context.findAncestorStateOfType<MainNavigationScreenState>();
+              if (mainNavState != null) {
+                mainNavState.navigateToMemoriesWithTab(1); // 1 is the index for Been tab
+              }
             },
           ),
           
@@ -213,12 +217,18 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             title: const Text('Bookmarks'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              // TODO: Navigate to Bookmarks page
+              final mainNavState = context.findAncestorStateOfType<MainNavigationScreenState>();
+              if (mainNavState != null) {
+                mainNavState.navigateToMemoriesWithTab(2); // 2 is the index for Want to go tab
+              }
             },
           ),
           
           // Divider
           const Divider(height: 1, thickness: 1),
+          
+          // Add spacing between buttons and tab bar
+          const SizedBox(height: 16),
           
           // TabBar and TabBarView for Recent Activity and Taste Profile
           Expanded(

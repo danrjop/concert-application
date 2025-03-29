@@ -5,6 +5,7 @@ import '../services/user_profile_service.dart';
 import '../models/user_profile.dart';
 import '../screens/main_navigation_screen.dart';
 import '../screens/edit_profile_screen.dart';
+import '../screens/settings_screen.dart';
 import '../utils/image_helper.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -91,7 +92,12 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Settings'),
             onTap: () {
               Navigator.pop(context);
-              // TODO: Navigate to settings page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
             },
           ),
           ListTile(

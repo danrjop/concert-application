@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../services/user_profile_service.dart';
 import '../models/user_profile.dart';
 import '../utils/image_helper.dart';
-import 'account_settings_screen.dart';
+import 'settings/account_information_screen.dart';
 import 'edit_name_screen.dart';
 import 'edit_username_screen.dart';
 import 'edit_bio_screen.dart';
@@ -169,7 +169,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const AccountSettingsScreen(),
+                  builder: (context) => const AccountInformationScreen(),
                 ),
               );
             },

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
+import 'main_navigation_screen.dart';
 
 class MemoriesScreen extends StatefulWidget {
-  const MemoriesScreen({super.key});
+  // Optional parameter for which tab to select initially
+  final int? initialTabIndex;
+  const MemoriesScreen({super.key, this.initialTabIndex});
 
   @override
   State<MemoriesScreen> createState() => _MemoriesScreenState();
@@ -17,6 +20,23 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
     'Recs', 
     'Trending'
   ];
+  
+  // Get the initial tab index to use
+  int get _initialTabIndex {
+    // Check if we have a specific tab to show from MainNavigationScreen
+    if (MainNavigationScreenState.memoriesTabToSelect != null) {
+      final index = MainNavigationScreenState.memoriesTabToSelect!;
+      // Reset it so it's not used again
+      MainNavigationScreenState.memoriesTabToSelect = null;
+      return index;
+    }
+    // Otherwise check if the widget has an initialTabIndex
+    if (widget.initialTabIndex != null) {
+      return widget.initialTabIndex!;
+    }
+    // Default to the first tab (Scrapbooks)
+    return 0;
+  }
   
   // Filter states
   String? _selectedCity;
@@ -50,7 +70,8 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _tabLabels.length, vsync: this);
+    // Initialize the tab controller with the correct initial tab
+    _tabController = TabController(initialIndex: _initialTabIndex, length: _tabLabels.length, vsync: this);
     _tabController.addListener(_handleTabChange);
     _selectedCity = _cities.first;
     _selectedGenre = _genres.first;
@@ -66,6 +87,15 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
   void _handleTabChange() {
     if (_tabController.indexIsChanging) {
       setState(() {});
+    }
+  }
+  
+  // Public method to select a specific tab
+  void selectTab(int index) {
+    if (index >= 0 && index < _tabLabels.length) {
+      // Use jumpTo instead of animateTo for immediate tab change without animation
+      _tabController.index = index;
+      setState(() {}); // Refresh UI to reflect the change
     }
   }
 

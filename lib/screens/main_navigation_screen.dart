@@ -14,6 +14,7 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Main Navigation Screens
+  // Main Navigation Screens
   final List<Widget> _screens = [
     const HomeScreen(),  
     const SearchScreen(),
@@ -21,6 +22,9 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
     const MemoriesScreen(),
     const ProfileScreen(),
   ];
+  
+  // Used to navigate to a specific tab in the memories screen
+  static int? memoriesTabToSelect;
 
   void onItemTapped(int index) {
     setState(() {
@@ -30,6 +34,12 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
 
   void openSidebar() {
     _scaffoldKey.currentState?.openEndDrawer();
+  }
+  
+  // Method to navigate to memories screen and select a specific tab
+  void navigateToMemoriesWithTab(int tabIndex) {
+    MainNavigationScreenState.memoriesTabToSelect = tabIndex;
+    onItemTapped(3); // Index 3 is the memories screen
   }
 
   @override
