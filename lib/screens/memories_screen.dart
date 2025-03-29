@@ -27,6 +27,26 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
   final List<String> _cities = ['All', 'New York', 'Los Angeles', 'Chicago', 'Miami', 'Austin'];
   final List<String> _genres = ['All', 'Rock', 'Pop', 'Hip Hop', 'EDM', 'Jazz', 'Classical'];
 
+  // Mock data for scrapbooks - in a real app this would come from a database
+  final Map<int, List<ScrapbookItem>> _scrapbooksByYear = {
+    2025: [
+      ScrapbookItem(id: '1', title: 'EDC Las Vegas', date: 'May 15, 2025', imageUrl: 'assets/images/concert1.jpg'),
+      ScrapbookItem(id: '2', title: 'Coachella', date: 'April 10, 2025', imageUrl: 'assets/images/concert2.jpg'),
+    ],
+    2024: [
+      ScrapbookItem(id: '3', title: 'Lollapalooza', date: 'August 3, 2024', imageUrl: 'assets/images/concert3.jpg'),
+      ScrapbookItem(id: '4', title: 'Rolling Loud', date: 'July 25, 2024', imageUrl: 'assets/images/concert4.jpg'),
+      ScrapbookItem(id: '5', title: 'Ultra Music Festival', date: 'March 22, 2024', imageUrl: 'assets/images/concert5.jpg'),
+    ],
+    2023: [
+      ScrapbookItem(id: '6', title: 'Glastonbury', date: 'June 21, 2023', imageUrl: 'assets/images/concert6.jpg'),
+      ScrapbookItem(id: '7', title: 'Tomorrowland', date: 'July 20, 2023', imageUrl: 'assets/images/concert7.jpg'),
+    ],
+    2022: [
+      ScrapbookItem(id: '8', title: 'Burning Man', date: 'August 28, 2022', imageUrl: 'assets/images/concert8.jpg'),
+    ],
+  };
+
   @override
   void initState() {
     super.initState();
@@ -217,6 +237,50 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
     );
   }
 
+  // Show the create new scrapbook dialog
+  void _showCreateScrapbookDialog(int year) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Create New Scrapbook'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Concert Title',
+                hintText: 'Enter concert name',
+              ),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Date',
+                hintText: 'MM/DD/YYYY',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('CANCEL'),
+          ),
+          TextButton(
+            onPressed: () {
+              // This would add a new scrapbook in a real app
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('New scrapbook created for $year')),
+              );
+            },
+            child: const Text('CREATE'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -397,11 +461,8 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
             child: TabBarView(
               controller: _tabController,
               children: _tabLabels.map((label) {
-                // Return different content based on the tab
                 if (label == 'Scrapbooks') {
-                  return const Center(
-                    child: Text('Scrapbooks Content'),
-                  );
+                  return _buildScrapbooksTimeline();
                 } else {
                   // Content for tabs that have filters
                   return _buildFilteredContent(label);
@@ -410,6 +471,161 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
             ),
           ),
         ],
+      ),
+    );
+  }
+  
+  // Build the scrapbooks timeline
+  Widget _buildScrapbooksTimeline() {
+    // Get years in descending order (most recent first)
+    final List<int> years = _scrapbooksByYear.keys.toList()..sort((a, b) => b.compareTo(a));
+    
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      itemCount: years.length,
+      itemBuilder: (context, index) {
+        final year = years[index];
+        final scrapbooks = _scrapbooksByYear[year]!;
+        
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Year header
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12, top: 12),
+              child: Text(
+                year.toString(),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            
+            // Grid of scrapbook cards
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 1,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: scrapbooks.length + 1, // +1 for the "Add" card
+              itemBuilder: (context, cardIndex) {
+                if (cardIndex == 0) {
+                  // "Add new" card (always first)
+                  return _buildAddScrapbookCard(year);
+                } else {
+                  // Regular scrapbook card
+                  final scrapbook = scrapbooks[cardIndex - 1];
+                  return _buildScrapbookCard(scrapbook);
+                }
+              },
+            ),
+            
+            // Divider between years
+            if (index < years.length - 1)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Divider(),
+              ),
+          ],
+        );
+      },
+    );
+  }
+  
+  // Build the "Add new scrapbook" card
+  Widget _buildAddScrapbookCard(int year) {
+    return InkWell(
+      onTap: () => _showCreateScrapbookDialog(year),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: const Center(
+          child: Icon(
+            Icons.add,
+            size: 40,
+            color: Colors.grey,
+          ),
+        ),
+      ),
+    );
+  }
+  
+  // Build a scrapbook card
+  Widget _buildScrapbookCard(ScrapbookItem scrapbook) {
+    return InkWell(
+      onTap: () {
+        // Navigate to scrapbook detail view (to be implemented)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Opening scrapbook: ${scrapbook.title}')),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[300], // Placeholder for actual images
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 2,
+              offset: const Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // This would be an actual Image widget in a real app
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                color: Colors.grey[400], // Placeholder for image
+                child: Center(
+                  child: Icon(
+                    Icons.music_note,
+                    size: 30,
+                    color: Colors.grey[100],
+                  ),
+                ),
+              ),
+            ),
+            
+            // Title overlay at the bottom
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  scrapbook.title,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -443,4 +659,19 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
       ),
     );
   }
+}
+
+// Data model for a scrapbook item
+class ScrapbookItem {
+  final String id;
+  final String title;
+  final String date;
+  final String imageUrl;
+
+  ScrapbookItem({
+    required this.id,
+    required this.title,
+    required this.date,
+    required this.imageUrl,
+  });
 }
