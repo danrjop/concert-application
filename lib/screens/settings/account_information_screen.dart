@@ -6,6 +6,7 @@ import '../change_password_screen.dart';
 import '../edit_name_screen.dart';
 import '../edit_username_screen.dart';
 import '../change_phone_screen.dart';
+import '../change_home_city_screen.dart';
 
 class AccountInformationScreen extends StatefulWidget {
   const AccountInformationScreen({super.key});
@@ -75,13 +76,10 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
           ListTile(
             leading: const Icon(Icons.location_city_outlined),
             title: const Text('Home City'),
-            subtitle: const Text('New York, NY'),
+            subtitle: Text(userProfile?.homeCityDisplay ?? userProfile?.homeCityName ?? 'Not set'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              // TODO: Navigate to home city selection
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Home City settings')),
-              );
+              Navigator.pushNamed(context, '/change_home_city');
             },
           ),
           const Divider(),
