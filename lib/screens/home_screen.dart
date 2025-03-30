@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/post_card.dart';
+import '../constants/app_constants.dart';
 import 'main_navigation_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,7 +14,8 @@ class HomeScreen extends StatelessWidget {
           'LOGO',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
-        backgroundColor: Colors.white,
+        // Use theme-aware colors
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         actions: [
           IconButton(
@@ -50,7 +52,9 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Theme.of(context).brightness == Brightness.dark 
+                      ? AppConstants.darkGreyColor 
+                      : Colors.grey[200],
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -76,10 +80,14 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 8.0),
                     child: Chip(
                       label: const Text('Label'),
-                      backgroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).brightness == Brightness.dark 
+                          ? AppConstants.darkGreyColor 
+                          : Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.grey[300]!),
+                        side: BorderSide(color: Theme.of(context).brightness == Brightness.dark 
+                            ? Colors.grey[800]! 
+                            : Colors.grey[300]!),
                       ),
                     ),
                   ),
@@ -93,8 +101,13 @@ class HomeScreen extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[300]!),
+                border: Border.all(color: Theme.of(context).brightness == Brightness.dark 
+                    ? Colors.grey[800]! 
+                    : Colors.grey[300]!),
                 borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? AppConstants.darkSurfaceColor 
+                    : Theme.of(context).cardColor,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

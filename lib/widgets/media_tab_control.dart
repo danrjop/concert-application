@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/app_constants.dart';
 
 class MediaTabControl extends StatelessWidget {
   final int selectedIndex;
@@ -18,7 +19,9 @@ class MediaTabControl extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       height: 44, // iOS standard height
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppConstants.darkGreyColor
+            : Colors.grey[200],
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -30,7 +33,11 @@ class MediaTabControl extends StatelessWidget {
               child: Container(
                 margin: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
-                  color: isSelected ? Colors.white : Colors.transparent,
+                  color: isSelected 
+                    ? Theme.of(context).brightness == Brightness.dark
+                        ? AppConstants.darkSurfaceColor
+                        : Colors.white 
+                    : Colors.transparent,
                   borderRadius: BorderRadius.circular(6),
                   boxShadow: isSelected
                       ? [
@@ -47,7 +54,13 @@ class MediaTabControl extends StatelessWidget {
                   child: Text(
                     tabLabels[index],
                     style: TextStyle(
-                      color: isSelected ? Colors.black : Colors.black54,
+                      color: isSelected 
+                          ? Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black 
+                          : Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white70
+                              : Colors.black54,
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                       fontSize: 14,
                     ),

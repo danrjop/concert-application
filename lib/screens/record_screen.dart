@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 import '../widgets/media_tab_control.dart';
+import '../constants/app_constants.dart';
 
 class RecordScreen extends StatefulWidget {
   const RecordScreen({super.key});
@@ -153,9 +154,19 @@ class _RecordScreenState extends State<RecordScreen> {
       appBar: AppBar(
         title: const Text('Record'),
         elevation: 0,
-        backgroundColor: Colors.white,
-        titleTextStyle: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600),
-        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        titleTextStyle: TextStyle(
+          color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white
+            : Colors.black, 
+          fontSize: 18, 
+          fontWeight: FontWeight.w600
+        ),
+        iconTheme: IconThemeData(
+          color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white
+            : Colors.black
+        ),
       ),
       body: Column(
         children: [

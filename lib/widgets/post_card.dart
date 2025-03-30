@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/app_constants.dart';
 
 class PostCard extends StatelessWidget {
   final String username;
@@ -22,10 +23,14 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
+        border: Border.all(color: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!),
         borderRadius: BorderRadius.circular(10),
+        color: isDarkMode ? AppConstants.darkSurfaceColor : theme.cardColor,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +43,7 @@ class PostCard extends StatelessWidget {
                 Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: Colors.grey[300],
+                      backgroundColor: isDarkMode ? AppConstants.darkAccentColor : Colors.grey[300],
                       child: Text(username[0]),
                     ),
                     const SizedBox(width: 8),
@@ -51,7 +56,7 @@ class PostCard extends StatelessWidget {
                         ),
                         Text(
                           'in $groupName',
-                          style: TextStyle(color: Colors.grey[600]),
+                          style: TextStyle(color: isDarkMode ? Colors.grey[400] : Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -61,7 +66,7 @@ class PostCard extends StatelessWidget {
                   children: [
                     Text(
                       timeAgo,
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: TextStyle(color: isDarkMode ? Colors.grey[400] : Colors.grey[600]),
                     ),
                     IconButton(
                       icon: const Icon(Icons.more_horiz),

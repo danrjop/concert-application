@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'index.dart';
 import '../widgets/app_drawer.dart';
+import '../constants/app_constants.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -52,7 +53,12 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
         decoration: BoxDecoration(
           // Add a top border or shadow for iOS style appearance
           border: Border(
-            top: BorderSide(color: Colors.grey.shade300, width: 0.5),
+            top: BorderSide(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey.shade800
+                  : Colors.grey.shade300,
+              width: 0.5
+            ),
           ),
         ),
         child: BottomNavigationBar(
@@ -88,7 +94,9 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
           unselectedItemColor: Colors.grey,
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? AppConstants.darkBackgroundColor
+              : Colors.white,
           elevation: 0,
           onTap: onItemTapped,
         ),

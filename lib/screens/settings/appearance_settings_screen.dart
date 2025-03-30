@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../services/theme/theme_service.dart';
 
 class AppearanceSettingsScreen extends StatefulWidget {
   const AppearanceSettingsScreen({super.key});
@@ -8,7 +10,16 @@ class AppearanceSettingsScreen extends StatefulWidget {
 }
 
 class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
+  // Start with dark mode disabled by default, will update in build method
   bool _darkModeEnabled = false;
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Set value based on current theme mode from theme service
+    final themeService = Provider.of<ThemeService>(context, listen: false);
+    _darkModeEnabled = themeService.currentTheme == ThemeOption.dark;
+  }
   String _selectedLanguage = 'English';
   String _selectedTheme = 'Default';
   String _selectedFontSize = 'Medium';
@@ -49,7 +60,14 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
               setState(() {
                 _darkModeEnabled = value;
               });
-              // TODO: Implement dark mode toggle
+              
+              // Update the theme using ThemeService
+              final themeService = Provider.of<ThemeService>(context, listen: false);
+              themeService.toggleDarkMode(isDark: value);
+              
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Dark mode ${value ? 'enabled' : 'disabled'}')),
+              );
             },
             secondary: const Icon(Icons.dark_mode_outlined),
           ),

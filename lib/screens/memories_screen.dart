@@ -316,12 +316,23 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'My Memories',
-          style: AppConstants.titleStyle,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppConstants.darkTextColor
+                : AppConstants.textColor,
+          ),
         ),
-        backgroundColor: AppConstants.backgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
+        iconTheme: IconThemeData(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppConstants.darkTextColor
+              : AppConstants.textColor,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.share_outlined),
@@ -398,10 +409,16 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
                       ),
                       onSelected: (_) => _showAdvancedFilters(),
                       selected: false,
-                      backgroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).brightness == Brightness.dark
+                          ? AppConstants.darkGreyColor
+                          : Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.grey[300]!),
+                        side: BorderSide(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[800]!
+                              : Colors.grey[300]!,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -428,10 +445,16 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
                           ),
                         );
                       },
-                      backgroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).brightness == Brightness.dark
+                          ? AppConstants.darkGreyColor
+                          : Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.grey[300]!),
+                        side: BorderSide(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[800]!
+                              : Colors.grey[300]!,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -445,10 +468,16 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
                           _isOpenNow = selected;
                         });
                       },
-                      backgroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).brightness == Brightness.dark
+                          ? AppConstants.darkGreyColor
+                          : Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.grey[300]!),
+                        side: BorderSide(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[800]!
+                              : Colors.grey[300]!,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -475,10 +504,16 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
                           ),
                         );
                       },
-                      backgroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).brightness == Brightness.dark
+                          ? AppConstants.darkGreyColor
+                          : Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.grey[300]!),
+                        side: BorderSide(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[800]!
+                              : Colors.grey[300]!,
+                        ),
                       ),
                     ),
                   ],

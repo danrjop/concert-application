@@ -232,7 +232,9 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
         : _recentPeopleSearches;
         
     return Material(
-      color: Colors.white,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? AppConstants.darkSurfaceColor
+          : Colors.white,
       child: Container(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -405,13 +407,20 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                           hintText: _isSearchingConcerts 
                               ? 'Search for concerts' 
                               : 'Search for people',
+                          hintStyle: TextStyle(
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey[400]
+                                : Colors.grey[600],
+                          ),
                           prefixIcon: const Icon(Icons.search),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                             borderSide: BorderSide.none,
                           ),
                           filled: true,
-                          fillColor: Colors.grey[200],
+                          fillColor: Theme.of(context).brightness == Brightness.dark
+                              ? AppConstants.darkGreyColor
+                              : Colors.grey[200],
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 0,
                             horizontal: 16,
@@ -460,7 +469,9 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                           vertical: 12,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? AppConstants.darkGreyColor
+                              : Colors.grey[200],
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Row(

@@ -233,8 +233,15 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 // Tab Bar
                 TabBar(
                   controller: _tabController,
-                  labelColor: Colors.black,
-                  indicatorColor: Colors.black,
+                  labelColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                  unselectedLabelColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey[400]
+                      : Colors.grey[600],
+                  indicatorColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
                   tabs: const [
                     Tab(text: 'Recent Activity'),
                     Tab(text: 'Taste Profile'),
@@ -270,7 +277,9 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               width: 40,
               height: 5,
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
                 borderRadius: BorderRadius.circular(3),
               ),
             ),

@@ -6,6 +6,7 @@ import 'constants/app_constants.dart';
 import 'services/auth_service.dart';
 import 'services/user_profile_service.dart';
 import 'services/city/city_service_provider.dart';
+import 'services/theme/theme_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-      create: (_) => AuthService(),
+          create: (_) => AuthService(),
         ),
         ChangeNotifierProvider(
           create: (_) => UserProfileService(),
@@ -34,11 +35,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => CityServiceProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => ThemeService(),
+        ),
       ],
-      child: Consumer<AuthService>(
-        builder: (context, authService, _) {
+      child: Consumer2<AuthService, ThemeService>(
+        builder: (context, authService, themeService, _) {
           return MaterialApp(
             title: 'Concert Tracker',
+            themeMode: themeService.themeMode, // Use theme service
+            // Light theme definition (original)
             theme: ThemeData(
               primarySwatch: Colors.blueGrey,
               visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -48,6 +54,47 @@ class MyApp extends StatelessWidget {
                 elevation: 0,
                 iconTheme: IconThemeData(color: AppConstants.textColor),
                 titleTextStyle: TextStyle(color: AppConstants.textColor, fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+            ),
+            // Dark theme definition
+            darkTheme: ThemeData(
+              brightness: Brightness.dark,
+              primaryColor: AppConstants.darkPrimaryColor,
+              scaffoldBackgroundColor: AppConstants.darkBackgroundColor,
+              cardColor: AppConstants.darkSurfaceColor,
+              colorScheme: ColorScheme.dark(
+                primary: AppConstants.darkPrimaryColor,
+                secondary: AppConstants.darkSecondaryColor,
+                surface: AppConstants.darkSurfaceColor,
+                background: AppConstants.darkBackgroundColor,
+                onBackground: AppConstants.darkTextColor,
+                onSurface: AppConstants.darkTextColor,
+              ),
+              appBarTheme: AppBarTheme(
+                color: AppConstants.darkBackgroundColor,
+                elevation: 0,
+                iconTheme: IconThemeData(color: AppConstants.darkTextColor),
+                titleTextStyle: TextStyle(color: AppConstants.darkTextColor, fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              textTheme: Typography.whiteMountainView.apply(bodyColor: AppConstants.darkTextColor),
+              dividerColor: Colors.grey[800],
+              inputDecorationTheme: InputDecorationTheme(
+                fillColor: AppConstants.darkGreyColor,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              chipTheme: ChipThemeData(
+                backgroundColor: AppConstants.darkGreyColor,
+                disabledColor: Colors.grey,
+                selectedColor: AppConstants.darkPrimaryColor,
+                secondarySelectedColor: AppConstants.darkSecondaryColor,
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                labelStyle: TextStyle(color: AppConstants.darkTextColor),
+                secondaryLabelStyle: TextStyle(color: AppConstants.darkTextColor),
+                brightness: Brightness.dark,
               ),
             ),
             debugShowCheckedModeBanner: false,
