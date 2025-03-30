@@ -5,6 +5,7 @@ import 'screens/index.dart';
 import 'constants/app_constants.dart';
 import 'services/auth_service.dart';
 import 'services/user_profile_service.dart';
+import 'services/city/city_service_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => UserProfileService(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CityServiceProvider(),
         ),
       ],
       child: Consumer<AuthService>(
@@ -66,6 +70,7 @@ class MyApp extends StatelessWidget {
               '/appearance_settings': (context) => const AppearanceSettingsScreen(),
               '/privacy_settings': (context) => const PrivacySettingsScreen(),
               '/account_actions': (context) => const AccountActionsScreen(),
+              '/change_home_city': (context) => const ChangeHomeCityScreen(),
             },
           );
         },

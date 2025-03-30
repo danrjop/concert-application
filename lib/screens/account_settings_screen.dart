@@ -4,6 +4,7 @@ import '../services/auth_service.dart';
 import '../services/user_profile_service.dart';
 import 'change_email_screen.dart';
 import 'change_password_screen.dart';
+import 'change_home_city_screen.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -68,6 +69,20 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ChangePasswordScreen(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.location_city_outlined),
+            title: const Text('Home City'),
+            subtitle: userProfile?.homeCity != null ? Text(userProfile!.homeCity!) : const Text('Not set'),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChangeHomeCityScreen(),
                 ),
               );
             },

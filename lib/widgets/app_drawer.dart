@@ -5,6 +5,8 @@ import '../services/user_profile_service.dart';
 import '../screens/main_navigation_screen.dart';
 import '../screens/edit_profile_screen.dart';
 import '../screens/settings_screen.dart';
+import '../screens/change_password_screen.dart';
+import '../screens/change_home_city_screen.dart';
 import '../utils/image_helper.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -118,9 +120,15 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.location_city_outlined),
             title: const Text('Home City'),
+            subtitle: userProfile?.homeCity != null ? Text(userProfile!.homeCity!) : null,
             onTap: () {
               Navigator.pop(context);
-              // TODO: Navigate to home city page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChangeHomeCityScreen(),
+                ),
+              );
             },
           ),
           ListTile(
@@ -128,7 +136,12 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Change Password'),
             onTap: () {
               Navigator.pop(context);
-              // TODO: Navigate to change password page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChangePasswordScreen(),
+                ),
+              );
             },
           ),
           ListTile(

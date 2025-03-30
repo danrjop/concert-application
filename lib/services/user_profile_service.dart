@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_profile.dart';
+import '../models/city.dart';
 
 class UserProfileService extends ChangeNotifier {
   UserProfile? _currentUserProfile;
@@ -106,6 +107,31 @@ class UserProfileService extends ChangeNotifier {
     if (_currentUserProfile != null) {
       _currentUserProfile = _currentUserProfile!.copyWith(
         bio: bio,
+      );
+      notifyListeners();
+      _saveUserProfile(); // Save changes to shared preferences
+    }
+  }
+
+  // Legacy method for updating just the city name
+  Future<void> updateHomeCity(String homeCity) async {
+    if (_currentUserProfile != null) {
+      _currentUserProfile = _currentUserProfile!.copyWith(
+        homeCityName: homeCity,
+        homeCityDisplay: homeCity,
+      );
+      notifyListeners();
+      _saveUserProfile(); // Save changes to shared preferences
+    }
+  }
+  
+  // Update home city with a City object
+  Future<void> updateHomeCityWithObject(City city) async {
+    if (_currentUserProfile != null) {
+      _currentUserProfile = _currentUserProfile!.copyWith(
+        homeCityId: city.id,
+        homeCityName: city.name,
+        homeCityDisplay: city.displayName,
       );
       notifyListeners();
       _saveUserProfile(); // Save changes to shared preferences

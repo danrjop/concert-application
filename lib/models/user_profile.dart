@@ -6,6 +6,12 @@ class UserProfile {
   String? bio;
   String? profilePhotoUrl;
   String? backgroundPhotoUrl;
+  
+  // Home city information
+  String? homeCityId;
+  String? homeCityName;
+  String? homeCityDisplay; // Formatted display name (city, state/province, country)
+  
   int followers;
   int following;
   int rank;
@@ -18,6 +24,9 @@ class UserProfile {
     this.bio,
     this.profilePhotoUrl,
     this.backgroundPhotoUrl,
+    this.homeCityId,
+    this.homeCityName,
+    this.homeCityDisplay,
     this.followers = 0,
     this.following = 0,
     this.rank = 0,
@@ -32,6 +41,9 @@ class UserProfile {
     String? bio,
     String? profilePhotoUrl,
     String? backgroundPhotoUrl,
+    String? homeCityId,
+    String? homeCityName,
+    String? homeCityDisplay,
     int? followers,
     int? following,
     int? rank,
@@ -44,6 +56,9 @@ class UserProfile {
       bio: bio ?? this.bio,
       profilePhotoUrl: profilePhotoUrl ?? this.profilePhotoUrl,
       backgroundPhotoUrl: backgroundPhotoUrl ?? this.backgroundPhotoUrl,
+      homeCityId: homeCityId ?? this.homeCityId,
+      homeCityName: homeCityName ?? this.homeCityName,
+      homeCityDisplay: homeCityDisplay ?? this.homeCityDisplay,
       followers: followers ?? this.followers,
       following: following ?? this.following,
       rank: rank ?? this.rank,
@@ -60,6 +75,9 @@ class UserProfile {
       'bio': bio,
       'profilePhotoUrl': profilePhotoUrl,
       'backgroundPhotoUrl': backgroundPhotoUrl,
+      'homeCityId': homeCityId,
+      'homeCityName': homeCityName,
+      'homeCityDisplay': homeCityDisplay,
       'followers': followers,
       'following': following,
       'rank': rank,
@@ -76,9 +94,15 @@ class UserProfile {
       bio: json['bio'],
       profilePhotoUrl: json['profilePhotoUrl'],
       backgroundPhotoUrl: json['backgroundPhotoUrl'],
+      homeCityId: json['homeCityId'],
+      homeCityName: json['homeCityName'],
+      homeCityDisplay: json['homeCityDisplay'],
       followers: json['followers'] ?? 0,
       following: json['following'] ?? 0,
       rank: json['rank'] ?? 0,
     );
   }
+  
+  // For backward compatibility
+  String? get homeCity => homeCityName;
 }
