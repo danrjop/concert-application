@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
+import '../widgets/clickable_user_avatar.dart';
+import '../widgets/user_profile_overlay.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -220,31 +222,37 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      CircleAvatar(
+                      ClickableUserAvatar(
+                        userId: 'user${index + 1}', // User ID based on index
                         radius: 30,
-                        backgroundColor: Colors.grey[300],
-                        child: const Icon(Icons.person, size: 30),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'User ${index + 1}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                        child: GestureDetector(
+                          onTap: () {
+                            // Show user profile overlay when username is clicked
+                            final userId = 'user${index + 1}';
+                            UserProfileOverlay.show(context, userId);
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'User ${index + 1}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '@username${index + 1}',
-                              style: TextStyle(
-                                color: Colors.grey[600],
+                              const SizedBox(height: 4),
+                              Text(
+                                '@username${index + 1}',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       TextButton(

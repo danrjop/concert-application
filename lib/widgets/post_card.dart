@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
+import '../widgets/clickable_user_avatar.dart';
+import '../widgets/user_profile_overlay.dart';
 
 class PostCard extends StatelessWidget {
   final String username;
@@ -9,6 +11,7 @@ class PostCard extends StatelessWidget {
   final int likes;
   final int comments;
   final String? imageUrl;
+  final String userId; // Added userId parameter
 
   const PostCard({
     super.key,
@@ -18,6 +21,7 @@ class PostCard extends StatelessWidget {
     required this.description,
     required this.likes,
     required this.comments,
+    required this.userId, // Added userId as required parameter
     this.imageUrl,
   });
 
@@ -42,17 +46,23 @@ class PostCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      backgroundColor: isDarkMode ? AppConstants.darkAccentColor : Colors.grey[300],
-                      child: Text(username[0]),
+                    ClickableUserAvatar(
+                      userId: userId,
+                      imageUrl: 'assets/flower.png',
                     ),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          username,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        // Make the username clickable
+                        GestureDetector(
+                          onTap: () {
+                            UserProfileOverlay.show(context, userId);
+                          },
+                          child: Text(
+                            username,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
                         Text(
                           'in $groupName',

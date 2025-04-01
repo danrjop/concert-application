@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../services/user_profile_service.dart';
 import 'edit_profile_screen.dart';
 import 'main_navigation_screen.dart';
+import 'follow_list_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -92,29 +93,49 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               // Followers
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${userProfile?.followers ?? 100}',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                  ),
-                                  const Text('Followers'),
-                                ],
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FollowListScreen.followers(),
+                                    ),
+                                  );
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${userProfile?.followers ?? 100}',
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    ),
+                                    const Text('Followers'),
+                                  ],
+                                ),
                               ),
                               
                               const SizedBox(width: 24), // Spacing between stats
                               
                               // Following
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${userProfile?.following ?? 100}',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                  ),
-                                  const Text('Following'),
-                                ],
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FollowListScreen.following(),
+                                    ),
+                                  );
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${userProfile?.following ?? 100}',
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    ),
+                                    const Text('Following'),
+                                  ],
+                                ),
                               ),
                               
                               const SizedBox(width: 24), // Spacing between stats

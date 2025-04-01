@@ -130,14 +130,26 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Your Feed',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Your Feed',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // TEMPORARY: Button to navigate to user profile demo
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/user_profile_demo');
+                  },
+                  child: const Text('User Profiles Demo'),
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -151,6 +163,7 @@ class HomeScreen extends StatelessWidget {
                   description: 'Post description',
                   likes: 21,
                   comments: 4,
+                  userId: 'user1', // Added user ID
                   imageUrl: null,
                 ),
                 const SizedBox(height: 16),
@@ -161,6 +174,7 @@ class HomeScreen extends StatelessWidget {
                   description: 'Body text for a post. Since it\'s a social app, sometimes it\'s a hot take, and sometimes it\'s...',
                   likes: 0,
                   comments: 0,
+                  userId: 'user2', // Added user ID
                   imageUrl: null,
                 ),
               ],

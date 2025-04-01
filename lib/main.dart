@@ -5,6 +5,7 @@ import 'screens/index.dart';
 import 'constants/app_constants.dart';
 import 'services/auth_service.dart';
 import 'services/user_profile_service.dart';
+import 'services/other_user_profile_service.dart';
 import 'services/city/city_service_provider.dart';
 import 'services/theme/theme_service.dart';
 
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => UserProfileService(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => OtherUserProfileService(),
         ),
         ChangeNotifierProvider(
           create: (_) => CityServiceProvider(),
@@ -118,6 +122,7 @@ class MyApp extends StatelessWidget {
               '/privacy_settings': (context) => const PrivacySettingsScreen(),
               '/account_actions': (context) => const AccountActionsScreen(),
               '/change_home_city': (context) => const ChangeHomeCityScreen(),
+              '/user_profile_demo': (context) => const UserProfileDemoScreen(),
             },
           );
         },

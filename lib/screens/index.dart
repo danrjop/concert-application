@@ -20,6 +20,8 @@ export 'settings/privacy_settings_screen.dart';
 export 'settings/account_actions_screen.dart';
 export 'main_navigation_screen.dart';
 export 'change_home_city_screen.dart';
+export 'follow_list_screen.dart';
+export 'user_profile_demo_screen.dart';
 
 // Auth screens
 export 'auth/login_screen.dart';
