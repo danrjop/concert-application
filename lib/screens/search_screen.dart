@@ -36,9 +36,11 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        setState(() {
-          _showRecentSearches = false;
-        });
+        if (_showRecentSearches) {
+          setState(() {
+            _showRecentSearches = false;
+          });
+        }
       }
     });
   }
@@ -380,6 +382,13 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                         unselectedLabelColor: Colors.grey,
                         indicatorColor: AppConstants.primaryColor,
                         indicatorWeight: 2,
+                        onTap: (index) {
+                          // Pre-calculate so we don't need a full setState
+                          final bool willBeConcertsTab = index == 0;
+                          if (_isSearchingConcerts != willBeConcertsTab) {
+                            setState(() {});
+                          }
+                        },
                         tabs: const [
                           Tab(text: 'Concerts'),
                           Tab(text: 'People'),
@@ -459,11 +468,17 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                       ),
                     ),
                     
-                    const SizedBox(height: 16),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      height: _isSearchingConcerts ? 16 : 0,
+                    ),
                     
-                    // Location (only shown when searching for concerts)
-                    if (_isSearchingConcerts)
-                      Container(
+                    // Location (with smooth transition for appearing/disappearing)
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      child: _isSearchingConcerts ? Container(
+                        margin: const EdgeInsets.only(bottom: 0),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 12,
@@ -483,7 +498,8 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
                             Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
                           ],
                         ),
-                      ),
+                      ) : const SizedBox.shrink(),
+                    ),
                   ],
                 ),
               ),
