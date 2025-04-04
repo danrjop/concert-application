@@ -8,3 +8,5 @@ export 'concert_list_item.dart';
 export 'concert_sort_options.dart';
 export 'concert_search_bar.dart'; // Renamed to ConcertSearchBar
 export 'want_to_go/index.dart'; // Export Want to Go widgets
+export 'recs/index.dart'; // Export Recs widgets
+export 'trending/index.dart'; // Export Trending widgets

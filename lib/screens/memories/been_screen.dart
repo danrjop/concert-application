@@ -195,6 +195,7 @@ class _BeenScreenState extends State<BeenScreen> {
                 SortDropdown(
                   currentSortOption: _currentSortOption,
                   onSortOptionSelected: _onSortOptionSelected,
+                  tabType: SortTabType.been,
                 ),
                 
                 // Search bar on the right

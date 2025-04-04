@@ -26,7 +26,7 @@ class _WantToGoScreenState extends State<WantToGoScreen> {
   String _searchQuery = '';
   
   // Sort state (reusing the same sort options as in BeenScreen)
-  ConcertSortOption _currentSortOption = ConcertSortOption.ratingDesc;
+  ConcertSortOption _currentSortOption = ConcertSortOption.dateDesc;
   
   @override
   void initState() {
@@ -236,6 +236,7 @@ class _WantToGoScreenState extends State<WantToGoScreen> {
                 SortDropdown(
                   currentSortOption: _currentSortOption,
                   onSortOptionSelected: _onSortOptionSelected,
+                  tabType: SortTabType.wantToGo,
                 ),
                 
                 // Search bar on the right

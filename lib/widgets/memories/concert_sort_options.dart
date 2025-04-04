@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_constants.dart';
 
+// Define the tab types for context-aware sorting options
+enum SortTabType {
+  been,     // Shows all sort options including rating
+  wantToGo, // Excludes rating from sort options
+  recs,     // Includes recommendation rating
+  trending  // Excludes rating from sort options
+}
 
 enum ConcertSortOption {
   artistAsc, // Artist A-Z
@@ -18,11 +25,13 @@ enum ConcertSortOption {
 class SortDropdown extends StatefulWidget {
   final ConcertSortOption currentSortOption;
   final Function(ConcertSortOption) onSortOptionSelected;
+  final SortTabType tabType;
 
   const SortDropdown({
     super.key, 
     required this.currentSortOption,
     required this.onSortOptionSelected,
+    this.tabType = SortTabType.been,
   });
 
   @override
@@ -76,7 +85,7 @@ class _SortDropdownState extends State<SortDropdown> {
       case 'Date':
         return descending ? ConcertSortOption.dateDesc : ConcertSortOption.dateAsc;
       default:
-        return ConcertSortOption.ratingDesc; // Default to rating
+        return ConcertSortOption.dateDesc; // Default to date
     }
   }
 
@@ -85,6 +94,19 @@ class _SortDropdownState extends State<SortDropdown> {
     // Get current field but opposite direction
     final newOption = getOptionForFieldAndDirection(sortField, !isDescending);
     widget.onSortOptionSelected(newOption);
+  }
+
+  // Get the available sort fields based on tab type
+  List<String> get _sortFields {
+    switch (widget.tabType) {
+      case SortTabType.been:
+        return ['Artist', 'Venue', 'Genre', 'Rating', 'Date'];
+      case SortTabType.wantToGo:
+      case SortTabType.trending:
+        return ['Artist', 'Venue', 'Genre', 'Date'];
+      case SortTabType.recs:
+        return ['Artist', 'Venue', 'Genre', 'Rating', 'Date'];
+    }
   }
 
   @override
@@ -122,7 +144,7 @@ class _SortDropdownState extends State<SortDropdown> {
           // Simple dropdown for sort field
           DropdownButtonHideUnderline(
             child: DropdownButton<String>(
-              value: sortField,
+              value: _sortFields.contains(sortField) ? sortField : _sortFields.first,
               icon: const Icon(Icons.arrow_drop_down, size: 14),
               iconSize: 14,
               isDense: true,
@@ -145,7 +167,7 @@ class _SortDropdownState extends State<SortDropdown> {
                   widget.onSortOptionSelected(newOption);
                 }
               },
-              items: ['Artist', 'Venue', 'Genre', 'Rating', 'Date']
+              items: _sortFields
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
