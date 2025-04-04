@@ -136,62 +136,62 @@ class WantToGoConcertListItem extends StatelessWidget {
               ),
             ),
             
-            // Action buttons instead of rating
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Buy tickets button
-                SizedBox(
-                  height: 24,
-                  child: IconButton(
-                    icon: const Icon(Icons.confirmation_number_outlined, size: 18),
-                    onPressed: onBuyTickets,
-                    color: Colors.green,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
-                    tooltip: 'Buy Tickets',
-                  ),
-                ),
-                
-                // Add to been button
-                SizedBox(
-                  height: 24,
-                  child: IconButton(
-                    icon: const Icon(Icons.check_circle_outline, size: 18),
-                    onPressed: onAddToBeen,
-                    color: AppConstants.primaryColor,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
-                    tooltip: 'Add to Been',
-                  ),
-                ),
-                
-                // Remove from Want to go button (filled bookmark)
-                SizedBox(
-                  height: 24,
-                  child: IconButton(
-                    icon: const Icon(Icons.bookmark, size: 18),
-                    onPressed: onRemoveFromWantToGo,
-                    color: Colors.amber,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
-                    tooltip: 'Remove from Want to Go',
-                  ),
-                ),
-                
-                // Date
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
+            // Right side column with date at top and icons at bottom
+            SizedBox(
+              height: 90, // Set a fixed height for the column
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Date at the top right
+                  Text(
                     _formatDate(concert.date),
                     style: const TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
                     ),
                   ),
-                ),
-              ],
+                  
+                  // Action buttons in a horizontal row at the bottom
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Buy tickets button
+                      IconButton(
+                        icon: const Icon(Icons.confirmation_number_outlined, size: 24),
+                        onPressed: onBuyTickets,
+                        color: Colors.green,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        visualDensity: VisualDensity.compact,
+                        tooltip: 'Buy Tickets',
+                      ),
+                      
+                      // Add to been button
+                      IconButton(
+                        icon: const Icon(Icons.check_circle_outline, size: 24),
+                        onPressed: onAddToBeen,
+                        color: AppConstants.primaryColor,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        visualDensity: VisualDensity.compact,
+                        tooltip: 'Add to Been',
+                      ),
+                      
+                      // Remove from Want to go button (filled bookmark)
+                      IconButton(
+                        icon: const Icon(Icons.bookmark, size: 24),
+                        onPressed: onRemoveFromWantToGo,
+                        color: Colors.amber,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        visualDensity: VisualDensity.compact,
+                        tooltip: 'Remove from Want to Go',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
