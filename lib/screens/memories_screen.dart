@@ -42,7 +42,8 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
   
   // Filter states
   String? _selectedCity;
-  bool _isOpenNow = false;
+  bool _isComingSoon = false;
+  int _comingSoonDays = 7; // Default to 7 days
   String? _selectedGenre;
 
   // Available filter options
@@ -87,31 +88,64 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
     return _tabController.index >= 1; // Index 1 is Been, 2 is Want to go, etc.
   }
 
+  // Check if the current tab is the Been tab
+  bool get _isBeenTab {
+    return _tabController.index == 1; // Index 1 is the Been tab
+  }
+
   // Show the advanced filter bottom sheet
   void _showAdvancedFilters() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return AdvancedFiltersSheet(
-          selectedCity: _selectedCity!,
-          cities: _cities,
-          selectedGenre: _selectedGenre!,
-          genres: _genres,
-          isOpenNow: _isOpenNow,
-          onApplyFilters: (city, genre, openNow) {
-            setState(() {
-              _selectedCity = city;
-              _selectedGenre = genre;
-              _isOpenNow = openNow;
-            });
-          },
-        );
-      },
-    );
+    if (_isBeenTab) {
+      // For Been tab, show the specialized advanced filters without Coming Soon or Open Now
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) {
+          return AdvancedFiltersForBeen(
+            selectedCity: _selectedCity!,
+            cities: _cities,
+            selectedGenre: _selectedGenre!,
+            genres: _genres,
+            onApplyFilters: (city, genre) {
+              setState(() {
+                _selectedCity = city;
+                _selectedGenre = genre;
+              });
+            },
+          );
+        },
+      );
+    } else {
+      // For other tabs, show the advanced filters with Coming Soon
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) {
+          return AdvancedFiltersWithComingSoon(
+            selectedCity: _selectedCity!,
+            cities: _cities,
+            selectedGenre: _selectedGenre!,
+            genres: _genres,
+            isComingSoon: _isComingSoon,
+            comingSoonDays: _comingSoonDays,
+            onApplyFilters: (city, genre, comingSoon, days) {
+              setState(() {
+                _selectedCity = city;
+                _selectedGenre = genre;
+                _isComingSoon = comingSoon;
+                _comingSoonDays = days;
+              });
+            },
+          );
+        },
+      );
+    }
   }
 
   // Get active filters for the current tab
@@ -119,7 +153,12 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
     List<String> activeFilters = [];
     if (_selectedCity != _cities.first) activeFilters.add(_selectedCity!);
     if (_selectedGenre != _genres.first) activeFilters.add(_selectedGenre!);
-    if (_isOpenNow) activeFilters.add('Open Now');
+    
+    // Only add Coming Soon filter for tabs other than Been
+    if (!_isBeenTab && _isComingSoon) {
+      activeFilters.add('Coming Soon $_comingSoonDays days');
+    }
+    
     return activeFilters;
   }
 
@@ -186,29 +225,48 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
 
           // Filter bar - visible only for specific tabs
           if (_shouldShowFilters)
-            FilterBar(
-              selectedCity: _selectedCity!,
-              cities: _cities,
-              selectedGenre: _selectedGenre!,
-              genres: _genres,
-              isOpenNow: _isOpenNow,
-              onAdvancedFiltersPressed: _showAdvancedFilters,
-              onCitySelected: (city) {
-                setState(() {
-                  _selectedCity = city;
-                });
-              },
-              onOpenNowToggled: (value) {
-                setState(() {
-                  _isOpenNow = value;
-                });
-              },
-              onGenreSelected: (genre) {
-                setState(() {
-                  _selectedGenre = genre;
-                });
-              },
-            ),
+            _isBeenTab
+                ? FilterBarForBeen(
+                    selectedCity: _selectedCity!,
+                    cities: _cities,
+                    selectedGenre: _selectedGenre!,
+                    genres: _genres,
+                    onAdvancedFiltersPressed: _showAdvancedFilters,
+                    onCitySelected: (city) {
+                      setState(() {
+                        _selectedCity = city;
+                      });
+                    },
+                    onGenreSelected: (genre) {
+                      setState(() {
+                        _selectedGenre = genre;
+                      });
+                    },
+                  )
+                : FilterBarWithComingSoon(
+                    selectedCity: _selectedCity!,
+                    cities: _cities,
+                    selectedGenre: _selectedGenre!,
+                    genres: _genres,
+                    isComingSoon: _isComingSoon,
+                    comingSoonDays: _comingSoonDays,
+                    onAdvancedFiltersPressed: _showAdvancedFilters,
+                    onCitySelected: (city) {
+                      setState(() {
+                        _selectedCity = city;
+                      });
+                    },
+                    onComingSoonToggled: (value) {
+                      setState(() {
+                        _isComingSoon = value;
+                      });
+                    },
+                    onGenreSelected: (genre) {
+                      setState(() {
+                        _selectedGenre = genre;
+                      });
+                    },
+                  ),
 
           // Content area - TabBarView to show content for each tab
           Expanded(

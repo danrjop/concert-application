@@ -2,7 +2,11 @@
 export 'scrapbooks_tab.dart';
 export 'filtered_content_tab.dart';
 export 'filter_bar.dart';
+export 'filter_bar_with_coming_soon.dart';
+export 'filter_bar_for_been.dart';
 export 'advanced_filters_sheet.dart';
+export 'advanced_filters_with_coming_soon.dart';
+export 'advanced_filters_for_been.dart';
 export 'create_scrapbook_dialog.dart';
 export 'concert_list_item.dart';
 export 'concert_sort_options.dart';
