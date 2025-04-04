@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_constants.dart';
 
+
 enum ConcertSortOption {
   artistAsc, // Artist A-Z
   artistDesc, // Artist Z-A
@@ -10,6 +11,8 @@ enum ConcertSortOption {
   genreDesc, // Genre Z-A
   ratingDesc, // Highest rating first
   ratingAsc, // Lowest rating first
+  dateDesc, // Most recent first
+  dateAsc, // Oldest first
 }
 
 class SortDropdown extends StatefulWidget {
@@ -42,6 +45,9 @@ class _SortDropdownState extends State<SortDropdown> {
       case ConcertSortOption.ratingAsc:
       case ConcertSortOption.ratingDesc:
         return 'Rating';
+      case ConcertSortOption.dateAsc:
+      case ConcertSortOption.dateDesc:
+        return 'Date';
     }
   }
 
@@ -52,6 +58,7 @@ class _SortDropdownState extends State<SortDropdown> {
       ConcertSortOption.venueDesc,
       ConcertSortOption.genreDesc,
       ConcertSortOption.ratingDesc,
+      ConcertSortOption.dateDesc,
     ].contains(widget.currentSortOption);
   }
 
@@ -66,6 +73,8 @@ class _SortDropdownState extends State<SortDropdown> {
         return descending ? ConcertSortOption.genreDesc : ConcertSortOption.genreAsc;
       case 'Rating':
         return descending ? ConcertSortOption.ratingDesc : ConcertSortOption.ratingAsc;
+      case 'Date':
+        return descending ? ConcertSortOption.dateDesc : ConcertSortOption.dateAsc;
       default:
         return ConcertSortOption.ratingDesc; // Default to rating
     }
@@ -117,19 +126,26 @@ class _SortDropdownState extends State<SortDropdown> {
               icon: const Icon(Icons.arrow_drop_down, size: 14),
               iconSize: 14,
               isDense: true,
+              itemHeight: 48,
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
+              underline: Container(),
+              menuMaxHeight: 400,
               padding: const EdgeInsets.only(left: 8, right: 12),
+              dropdownColor: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              // Control dropdown alignment
+              alignment: AlignmentDirectional.topStart,
               onChanged: (String? newValue) {
                 if (newValue != null) {
                   final newOption = getOptionForFieldAndDirection(newValue, isDescending);
                   widget.onSortOptionSelected(newOption);
                 }
               },
-              items: ['Artist', 'Venue', 'Genre', 'Rating']
+              items: ['Artist', 'Venue', 'Genre', 'Rating', 'Date']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,

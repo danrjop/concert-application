@@ -157,6 +157,12 @@ class _BeenScreenState extends State<BeenScreen> {
         case ConcertSortOption.ratingAsc:
           _filteredConcerts.sort((a, b) => a.rating.compareTo(b.rating));
           break;
+        case ConcertSortOption.dateDesc:
+          _filteredConcerts.sort((a, b) => b.date.compareTo(a.date));
+          break;
+        case ConcertSortOption.dateAsc:
+          _filteredConcerts.sort((a, b) => a.date.compareTo(b.date));
+          break;
       }
     });
   }

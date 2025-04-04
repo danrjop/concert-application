@@ -163,24 +163,6 @@ class _MemoriesScreenState extends State<MemoriesScreen> with SingleTickerProvid
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Concerts Title (clickable button)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TextButton(
-              onPressed: () {
-                // Concert button functionality will be implemented later
-              },
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: const Size(50, 30),
-                alignment: Alignment.centerLeft,
-              ),
-              child: const Text(
-                'Concerts',
-                style: AppConstants.subtitleStyle,
-              ),
-            ),
-          ),
           
           // Standard Flutter TabBar with 5 options
           Container(
