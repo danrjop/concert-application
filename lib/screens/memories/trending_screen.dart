@@ -3,6 +3,7 @@ import '../../widgets/memories/index.dart';
 import '../../widgets/memories/trending/trending_concert_list_item.dart';
 import '../../models/index.dart';
 import '../../constants/app_constants.dart';
+import '../concerts/concert_info_screen.dart';
 
 class TrendingScreen extends StatefulWidget {
   final List<String> activeFilters;
@@ -327,11 +328,13 @@ class _TrendingScreenState extends State<TrendingScreen> {
                         index: index,
                         isInWantToGo: isInWantToGo,
                         onTap: () {
-                          // Show a sample action when tapping on a concert
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Tapped ${concert.name}'),
-                              duration: const Duration(seconds: 1),
+                          // Navigate to the concert info screen
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ConcertInfoScreen(
+                                concert: concert,
+                                source: 'trending',
+                              ),
                             ),
                           );
                         },

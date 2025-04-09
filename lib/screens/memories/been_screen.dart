@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/memories/index.dart';
 import '../../models/index.dart';
 import '../../constants/app_constants.dart';
+import '../concerts/concert_info_screen.dart';
 
 class BeenScreen extends StatefulWidget {
   final List<String> activeFilters;
@@ -269,11 +270,13 @@ class _BeenScreenState extends State<BeenScreen> {
                         concert: concert,
                         index: index,
                         onTap: () {
-                          // Show a sample action when tapping on a concert
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Tapped ${concert.name}'),
-                              duration: const Duration(seconds: 1),
+                          // Navigate to the concert info screen
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ConcertInfoScreen(
+                                concert: concert,
+                                source: 'been',
+                              ),
                             ),
                           );
                         },

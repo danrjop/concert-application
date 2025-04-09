@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/concert.dart';
 import '../../constants/app_constants.dart';
+import '../../screens/concerts/concert_info_screen.dart';
 
 class ConcertListItem extends StatelessWidget {
   final Concert concert;

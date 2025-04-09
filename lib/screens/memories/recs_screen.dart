@@ -3,6 +3,7 @@ import '../../widgets/memories/index.dart';
 import '../../widgets/memories/recs/recs_concert_list_item.dart';
 import '../../models/index.dart';
 import '../../constants/app_constants.dart';
+import '../concerts/concert_info_screen.dart';
 
 class RecsScreen extends StatefulWidget {
   final List<String> activeFilters;
@@ -298,11 +299,13 @@ class _RecsScreenState extends State<RecsScreen> {
                         concert: concert,
                         index: index,
                         onTap: () {
-                          // Show a sample action when tapping on a concert
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Tapped ${concert.name}'),
-                              duration: const Duration(seconds: 1),
+                          // Navigate to the concert info screen
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ConcertInfoScreen(
+                                concert: concert,
+                                source: 'recs',
+                              ),
                             ),
                           );
                         },

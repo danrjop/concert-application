@@ -3,6 +3,7 @@ import '../../widgets/memories/index.dart';
 import '../../widgets/memories/want_to_go/want_to_go_concert_list_item.dart';
 import '../../models/index.dart';
 import '../../constants/app_constants.dart';
+import '../concerts/concert_info_screen.dart';
 
 class WantToGoScreen extends StatefulWidget {
   final List<String> activeFilters;
@@ -310,11 +311,13 @@ class _WantToGoScreenState extends State<WantToGoScreen> {
                         concert: concert,
                         index: index,
                         onTap: () {
-                          // Show a sample action when tapping on a concert
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Tapped ${concert.name}'),
-                              duration: const Duration(seconds: 1),
+                          // Navigate to the concert info screen
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ConcertInfoScreen(
+                                concert: concert,
+                                source: 'want_to_go',
+                              ),
                             ),
                           );
                         },
