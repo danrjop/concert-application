@@ -116,14 +116,14 @@ class ScrapbooksTab extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // This would be an actual Image widget in a real app
+            // Cover image background
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Container(
                 color: Colors.grey[400], // Placeholder for image
                 child: Center(
                   child: Icon(
-                    Icons.music_note,
+                    _getGenreIcon(scrapbook.genres),
                     size: 30,
                     color: Colors.grey[100],
                   ),
@@ -131,36 +131,123 @@ class ScrapbooksTab extends StatelessWidget {
               ),
             ),
             
-            // Title overlay at the bottom
+            // Title and info overlay at the bottom
             Positioned(
               left: 0,
               right: 0,
               bottom: 0,
               child: Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withOpacity(0.7),
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10),
                   ),
                 ),
-                child: Text(
-                  scrapbook.title,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    Text(
+                      scrapbook.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    // Date
+                    Text(
+                      scrapbook.date,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
+            
+            // Media count badge (if any)
+            if (scrapbook.mediaCount != null && scrapbook.mediaCount! > 0)
+              Positioned(
+                top: 5,
+                right: 5,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.photo_library,
+                        color: Colors.white,
+                        size: 10,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        '${scrapbook.mediaCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              
+            // Collaborative badge
+            if (scrapbook.isCollaborative)
+              Positioned(
+                top: 5,
+                left: 5,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.7),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.people,
+                    color: Colors.white,
+                    size: 10,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
     );
+  }
+  
+  // Get icon based on the genre
+  IconData _getGenreIcon(List<String>? genres) {
+    if (genres == null || genres.isEmpty) {
+      return Icons.music_note;
+    }
+    
+    // Use the first genre to determine the icon
+    final genre = genres.first.toLowerCase();
+    
+    if (genre.contains('rock')) return Icons.music_note;
+    if (genre.contains('pop')) return Icons.star;
+    if (genre.contains('hip hop') || genre.contains('rap')) return Icons.mic;
+    if (genre.contains('edm') || genre.contains('electronic')) return Icons.waves;
+    if (genre.contains('jazz')) return Icons.piano;
+    if (genre.contains('country')) return Icons.landscape;
+    if (genre.contains('metal')) return Icons.spatial_audio;
+    if (genre.contains('classical')) return Icons.music_note;
+    
+    // Default for other genres
+    return Icons.music_note;
   }
 }

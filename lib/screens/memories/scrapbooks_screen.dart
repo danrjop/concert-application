@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../models/memories/index.dart';
 import '../../widgets/memories/index.dart';
+import '../scrapbooks/scrapbook_detail_screen.dart';
 
+/// Screen that displays the user's collection of scrapbooks.
+/// Scrapbooks can be viewed, created, edited, and shared from here.
+/// 
+/// This is the main entry point to the scrapbook feature of the app.
 class ScrapbooksScreen extends StatefulWidget {
   const ScrapbooksScreen({super.key});
 
@@ -10,7 +15,7 @@ class ScrapbooksScreen extends StatefulWidget {
 }
 
 class _ScrapbooksScreenState extends State<ScrapbooksScreen> {
-  // Mock data for scrapbooks - in a real app this would come from a database
+  // Mock data for scrapbooks - will be replaced with Supabase fetch
   final Map<int, List<ScrapbookItem>> _scrapbooksByYear = {
     2025: [
       ScrapbookItem(id: '1', title: 'EDC Las Vegas', date: 'May 15, 2025', imageUrl: 'assets/images/concert1.jpg'),
@@ -19,14 +24,6 @@ class _ScrapbooksScreenState extends State<ScrapbooksScreen> {
     2024: [
       ScrapbookItem(id: '3', title: 'Lollapalooza', date: 'August 3, 2024', imageUrl: 'assets/images/concert3.jpg'),
       ScrapbookItem(id: '4', title: 'Rolling Loud', date: 'July 25, 2024', imageUrl: 'assets/images/concert4.jpg'),
-      ScrapbookItem(id: '5', title: 'Ultra Music Festival', date: 'March 22, 2024', imageUrl: 'assets/images/concert5.jpg'),
-    ],
-    2023: [
-      ScrapbookItem(id: '6', title: 'Glastonbury', date: 'June 21, 2023', imageUrl: 'assets/images/concert6.jpg'),
-      ScrapbookItem(id: '7', title: 'Tomorrowland', date: 'July 20, 2023', imageUrl: 'assets/images/concert7.jpg'),
-    ],
-    2022: [
-      ScrapbookItem(id: '8', title: 'Burning Man', date: 'August 28, 2022', imageUrl: 'assets/images/concert8.jpg'),
     ],
   };
 
@@ -42,7 +39,7 @@ class _ScrapbooksScreenState extends State<ScrapbooksScreen> {
   }
 
   // Handle creation of a new scrapbook
-  void _handleScrapbookCreated(String title, String date, int year) {
+  void _handleScrapbookCreated(String title, String date, int year, Map<String, dynamic> additionalData) {
     // This would add a new scrapbook in a real app
     setState(() {
       final newId = DateTime.now().millisecondsSinceEpoch.toString();
@@ -51,6 +48,13 @@ class _ScrapbooksScreenState extends State<ScrapbooksScreen> {
         title: title,
         date: date,
         imageUrl: 'assets/images/concert_placeholder.jpg',
+        venue: additionalData['venue'],
+        artists: additionalData['artists'],
+        genres: additionalData['genres'],
+        isCollaborative: additionalData['isCollaborative'] ?? false,
+        createdAt: additionalData['createdAt'],
+        updatedAt: additionalData['updatedAt'],
+        mediaCount: 0, // New scrapbook has no media yet
       );
       
       if (_scrapbooksByYear.containsKey(year)) {
@@ -60,16 +64,27 @@ class _ScrapbooksScreenState extends State<ScrapbooksScreen> {
       }
     });
     
+    // TODO: Create scrapbook in Supabase
+    // Future implementation would look something like:
+    // SupabaseClient client = Supabase.instance.client;
+    // client.from('scrapbooks').insert(newScrapbook.toJson()).execute();
+    
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('New scrapbook created for $year')),
+      SnackBar(content: Text('New scrapbook "$title" created for $year')),
     );
   }
 
   // Handle when a scrapbook is selected
   void _handleScrapbookSelected(ScrapbookItem scrapbook) {
-    // Navigate to scrapbook detail view (to be implemented)
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Opening scrapbook: ${scrapbook.title}')),
+    // Navigate to scrapbook detail view
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScrapbookDetailScreen(
+          scrapbook: scrapbook,
+          source: 'scrapbooks_screen',
+        ),
+      ),
     );
   }
 
