@@ -4,6 +4,8 @@ import '../utils/media_formatters.dart';
 import '../utils/media_builders.dart';
 
 class ThematicView extends StatelessWidget {
+  // Renamed from ThematicView but keeping the class name unchanged
+  // to maintain compatibility with other parts of the app
   final List<ScrapbookMedia> mediaItems;
   final Function(ScrapbookMedia) onMediaTap;
 
@@ -19,29 +21,47 @@ class ThematicView extends StatelessWidget {
       return const Center(child: Text('No media added yet. Tap + to add memories.'));
     }
     
-    // Group media by section (pre-show, main-show, post-show)
-    final Map<String, List<ScrapbookMedia>> mediaBySection = {};
+    // Group media by themes (based on tags or detected content)
+    final Map<String, List<ScrapbookMedia>> mediaByTheme = {};
     
+    // Create theme categories
+    mediaByTheme['Group Pictures'] = [];
+    mediaByTheme['Performance Highlights'] = [];
+    mediaByTheme['Venue & Atmosphere'] = [];
+    mediaByTheme['Food & Drinks'] = [];
+    
+    // Categorize media based on tags and content
     for (final media in mediaItems) {
-      if (!mediaBySection.containsKey(media.section)) {
-        mediaBySection[media.section] = [];
+      // Check tags to determine themes
+      if (media.tags.any((tag) => ['friends', 'group', 'people', 'crowd', 'selfie'].contains(tag))) {
+        mediaByTheme['Group Pictures']!.add(media);
       }
-      mediaBySection[media.section]!.add(media);
+      
+      if (media.tags.any((tag) => ['performance', 'stage', 'artist', 'band', 'song', 'highlight'].contains(tag))) {
+        mediaByTheme['Performance Highlights']!.add(media);
+      }
+      
+      if (media.tags.any((tag) => ['venue', 'stage', 'lights', 'atmosphere', 'effects'].contains(tag))) {
+        mediaByTheme['Venue & Atmosphere']!.add(media);
+      }
+      
+      if (media.tags.any((tag) => ['food', 'drinks', 'merch', 'souvenirs'].contains(tag))) {
+        mediaByTheme['Food & Drinks']!.add(media);
+      }
     }
     
-    // Get all sections and sort them in logical order
-    final List<String> sections = mediaBySection.keys.toList();
-    sections.sort((a, b) {
-      final order = {'pre-show': 0, 'main-show': 1, 'post-show': 2};
-      return (order[a] ?? 99).compareTo(order[b] ?? 99);
-    });
+    // Remove empty themes
+    mediaByTheme.removeWhere((key, value) => value.isEmpty);
+    
+    // Get all themes
+    final List<String> themes = mediaByTheme.keys.toList();
     
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: sections.length,
+      itemCount: themes.length,
       itemBuilder: (context, index) {
-        final section = sections[index];
-        final sectionMedia = mediaBySection[section]!;
+        final theme = themes[index];
+        final themeMedia = mediaByTheme[theme]!;
         
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +70,7 @@ class ThematicView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 16, top: 16),
               child: Text(
-                MediaFormatters.formatSectionName(section),
+                theme,
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -68,9 +88,9 @@ class ThematicView extends StatelessWidget {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
-              itemCount: sectionMedia.length,
+              itemCount: themeMedia.length,
               itemBuilder: (context, mediaIndex) {
-                final media = sectionMedia[mediaIndex];
+                final media = themeMedia[mediaIndex];
                 return GestureDetector(
                   onTap: () => onMediaTap(media),
                   child: ClipRRect(

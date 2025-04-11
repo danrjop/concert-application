@@ -39,7 +39,7 @@ class ScrapbookDetailScreen extends StatefulWidget {
 
 class _ScrapbookDetailScreenState extends State<ScrapbookDetailScreen> with TickerProviderStateMixin {
   // View mode, editing state and template options
-  String _currentView = 'timeline'; // 'timeline', 'thematic', 'grid'
+  String _currentView = 'timeline'; // 'timeline', 'highlights', 'grid'
   bool _isEditing = false;
   String _selectedTheme = 'Auto';
   String _selectedTemplate = 'Classic';
@@ -128,12 +128,12 @@ class _ScrapbookDetailScreenState extends State<ScrapbookDetailScreen> with Tick
           unselectedLabelColor: Colors.white70,
           onTap: (index) {
             setState(() {
-              _currentView = index == 0 ? 'timeline' : (index == 1 ? 'thematic' : 'grid');
+              _currentView = index == 0 ? 'timeline' : (index == 1 ? 'highlights' : 'grid');
             });
           },
           tabs: const [
             Tab(icon: Icon(Icons.timeline), text: 'Timeline'),
-            Tab(icon: Icon(Icons.category), text: 'Themes'),
+            Tab(icon: Icon(Icons.auto_awesome), text: 'Highlights'),
             Tab(icon: Icon(Icons.grid_on), text: 'Grid'),
           ],
         ),
@@ -141,19 +141,19 @@ class _ScrapbookDetailScreenState extends State<ScrapbookDetailScreen> with Tick
       body: TabBarView(
         controller: _viewTabController,
         children: [
-          // Timeline view - chronological order
+          // Timeline view - chronological order with swipeable annotations
           TimelineView(
             mediaItems: _scrapbookMedia, 
             onMediaTap: _showMediaDetail,
           ),
           
-          // Thematic view - grouped by theme
+          // Highlights view - grouped by themes across different times
           ThematicView(
             mediaItems: _scrapbookMedia, 
             onMediaTap: _showMediaDetail,
           ),
           
-          // Grid view - simple gallery style
+          // Grid view - manageable gallery for adding/removing media
           GridMediaView(
             mediaItems: _scrapbookMedia, 
             onMediaTap: _showMediaDetail,

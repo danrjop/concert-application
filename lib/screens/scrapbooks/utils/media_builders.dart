@@ -20,17 +20,26 @@ class MediaBuilders {
     }
   }
   
-  /// Build media content based on type
+  /// Build mock media content with orientation variety
   static Widget buildMediaContent(BuildContext context, ScrapbookMedia media) {
+    // Determine if this is a vertical or horizontal image based on ID hash
+    // This is just for testing purposes to show mixed orientations
+    final isVertical = media.id.hashCode % 3 == 0; // Every 3rd image is vertical
+    
     switch (media.type) {
       case 'photo':
-        return AspectRatio(
-          aspectRatio: 16 / 9,
-          child: buildPhotoContent(media),
-        );
+        return isVertical
+          ? AspectRatio(
+              aspectRatio: 9 / 16, // Vertical photo
+              child: buildPhotoContent(media),
+            )
+          : AspectRatio(
+              aspectRatio: 16 / 9, // Horizontal photo
+              child: buildPhotoContent(media),
+            );
       case 'video':
         return AspectRatio(
-          aspectRatio: 16 / 9,
+          aspectRatio: isVertical ? 9 / 16 : 16 / 9,
           child: buildVideoContent(context, media),
         );
       case 'audio':
