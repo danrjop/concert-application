@@ -422,6 +422,7 @@ class _TimelineViewState extends State<TimelineView> with SingleTickerProviderSt
                       child: FloatingActionButton(
                         mini: true,
                         onPressed: _showAddTimestampDialog,
+                        heroTag: 'add_timestamp_button', // Unique hero tag
                         child: const Icon(Icons.add),
                         tooltip: 'Add Timestamp',
                       ),

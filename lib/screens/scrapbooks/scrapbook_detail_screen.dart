@@ -163,6 +163,7 @@ class _ScrapbookDetailScreenState extends State<ScrapbookDetailScreen> with Tick
       floatingActionButton: _isEditing ? FloatingActionButton(
         onPressed: _showAddMediaSheet,
         backgroundColor: AppConstants.primaryColor,
+        heroTag: 'add_media_button', // Unique hero tag
         child: const Icon(Icons.add),
       ) : null,
     );
