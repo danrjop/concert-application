@@ -36,6 +36,15 @@ class _TimelineViewState extends State<TimelineView> with SingleTickerProviderSt
   }
 
   void _toggleAnnotation() {
+    // If in dragging mode, exit it first
+    if (_isDraggingMode) {
+      setState(() {
+        _isDraggingMode = false;
+        _draggingMedia = null;
+      });
+      return;
+    }
+    
     if (_isAnnotationVisible) {
       _animationController.reverse();
     } else {
@@ -44,6 +53,16 @@ class _TimelineViewState extends State<TimelineView> with SingleTickerProviderSt
     setState(() {
       _isAnnotationVisible = !_isAnnotationVisible;
     });
+  }
+  
+  // Reset or clear background media
+  void _clearBackgroundMedia() {
+    setState(() {
+      _backgroundMedia = null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Background removed')),
+    );
   }
 
   void _addMediaTitle(ScrapbookMedia media) {
@@ -86,6 +105,12 @@ class _TimelineViewState extends State<TimelineView> with SingleTickerProviderSt
   // Track current visible media for timeline dot highlighting
   int _currentVisibleMediaIndex = 0;
   ScrollController _scrollController = ScrollController();
+  
+  // For draggable media items
+  Map<String, Offset> _mediaPositions = {};
+  ScrapbookMedia? _draggingMedia;
+  ScrapbookMedia? _backgroundMedia;
+  bool _isDraggingMode = false;
   
   void _showAddTimestampDialog() {
     final now = DateTime.now();
@@ -189,33 +214,104 @@ class _TimelineViewState extends State<TimelineView> with SingleTickerProviderSt
     // Sort media by timestamp
     final sortedMedia = List<ScrapbookMedia>.from(widget.mediaItems)
       ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+      
+    // Filter out the background media if there is one
+    final displayedMedia = _backgroundMedia != null 
+        ? sortedMedia.where((media) => media.id != _backgroundMedia!.id).toList()
+        : sortedMedia;
 
     return Stack(
       children: [
+        // Background media if set
+        if (_backgroundMedia != null)
+          Positioned.fill(
+            child: GestureDetector(
+              onLongPress: _clearBackgroundMedia,
+              child: Container(
+                child: Stack(
+                  children: [
+                    // Background image or color
+                    Positioned.fill(
+                      child: _backgroundMedia!.type == 'photo'
+                        ? Image.asset(
+                            _backgroundMedia!.url ?? 'assets/images/concert_placeholder.jpg',
+                            fit: BoxFit.cover,
+                            opacity: const AlwaysStoppedAnimation(0.7), // Semi-transparent
+                          )
+                        : Container(color: Colors.black),
+                    ),
+                    // Hint to long press
+                    Positioned(
+                      right: 10,
+                      top: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.touch_app, color: Colors.white, size: 16),
+                            SizedBox(width: 5),
+                            Text('Long press to remove', style: TextStyle(color: Colors.white, fontSize: 12)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        
         // Main content - vertically scrolling photos
         SingleChildScrollView(
           controller: _scrollController,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: sortedMedia.map((media) {
-              return GestureDetector(
-                onTap: () => widget.onMediaTap(media),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 0), // No gap between photos
-                  child: Stack(
-                    children: [
-                      // Media content
-                      MediaBuilders.buildMediaContent(context, media),
-                    ],
+            children: displayedMedia.map((media) {
+              // Use stored position for this media if available
+              final hasPosition = _mediaPositions.containsKey(media.id);
+              
+              // Normal media display (not draggable)
+              if (!_isDraggingMode) {
+                return GestureDetector(
+                  onTap: () => widget.onMediaTap(media),
+                  onLongPress: () {
+                    // Enter dragging mode
+                    setState(() {
+                      _isDraggingMode = true;
+                      _draggingMedia = media;
+                      // Initialize position if not already set
+                      if (!_mediaPositions.containsKey(media.id)) {
+                        _mediaPositions[media.id] = Offset.zero;
+                      }
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 0), // No gap between photos
+                    child: MediaBuilders.buildMediaContent(context, media),
                   ),
-                ),
-              );
+                );
+              } else {
+                // In dragging mode, show placeholder for non-dragged items
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 0),
+                  height: _draggingMedia?.id == media.id ? 0 : null, // Hide the dragging media's original place
+                  color: _draggingMedia?.id == media.id ? Colors.transparent : null,
+                  child: _draggingMedia?.id == media.id 
+                    ? const SizedBox() // Empty space for the dragging item
+                    : MediaBuilders.buildMediaContent(context, media),
+                );
+              }
             }).toList(),
           ),
         ),
         
-        // Timeline rail with dots (only visible when sidebar is closed)
-        if (!_isAnnotationVisible)
+        // Timeline rail with dots (only visible when sidebar is closed and not in dragging mode)
+        if (!_isAnnotationVisible && !_isDraggingMode)
           Positioned(
             left: 0,
             top: 0,
@@ -233,8 +329,8 @@ class _TimelineViewState extends State<TimelineView> with SingleTickerProviderSt
                   ),
                   
                   // Timeline dots
-                  ...List.generate(sortedMedia.length, (index) {
-                    final media = sortedMedia[index];
+                  ...List.generate(displayedMedia.length, (index) {
+                    final media = displayedMedia[index];
                     final isCurrentMedia = index == _currentVisibleMediaIndex;
                     
                     // Calculate approximate position based on media index
@@ -269,6 +365,77 @@ class _TimelineViewState extends State<TimelineView> with SingleTickerProviderSt
                     );
                   }),
                 ],
+              ),
+            ),
+          ),
+          
+        // Currently dragged media item (only visible in dragging mode)
+        if (_isDraggingMode && _draggingMedia != null)
+          Positioned(
+            left: _mediaPositions[_draggingMedia!.id]?.dx ?? 0,
+            top: _mediaPositions[_draggingMedia!.id]?.dy ?? 0,
+            child: GestureDetector(
+              onPanUpdate: (details) {
+                setState(() {
+                  // Update the position of the dragged media
+                  _mediaPositions[_draggingMedia!.id] = Offset(
+                    (_mediaPositions[_draggingMedia!.id]?.dx ?? 0) + details.delta.dx,
+                    (_mediaPositions[_draggingMedia!.id]?.dy ?? 0) + details.delta.dy,
+                  );
+                });
+              },
+              onPanEnd: (details) {
+                // Check if the media was dropped in the top or bottom areas to set as background
+                final position = _mediaPositions[_draggingMedia!.id];
+                if (position != null) {
+                  final screenHeight = MediaQuery.of(context).size.height;
+                  if (position.dy < 80 || position.dy > screenHeight - 200) {
+                    // Set as background when dropped at top or bottom edge
+                    setState(() {
+                      _backgroundMedia = _draggingMedia;
+                      _draggingMedia = null;
+                      _isDraggingMode = false;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Media set as background. Long press to return to normal view.')),
+                    );
+                  } else {
+                    // Keep as draggable media
+                    setState(() {
+                      _draggingMedia = null;
+                      _isDraggingMode = false;
+                    });
+                  }
+                }
+              },
+              child: Container(
+                width: 150, // Smaller size for the draggable item
+                height: 150,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: _draggingMedia!.type == 'photo'
+                    ? Image.asset(
+                        _draggingMedia!.url ?? 'assets/images/concert_placeholder.jpg',
+                        fit: BoxFit.cover,
+                      )
+                    : Container(
+                        color: Colors.grey.shade800,
+                        child: Icon(
+                          _draggingMedia!.type == 'video' ? Icons.videocam : Icons.mic,
+                          color: Colors.white,
+                          size: 50,
+                        ),
+                      ),
+                ),
               ),
             ),
           ),

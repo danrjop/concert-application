@@ -234,8 +234,8 @@ class MediaDialogs {
     );
   }
   
-  /// Shows add media options sheet
-  static void showAddMediaSheet(BuildContext context, Function(String, bool) onAddMedia) {
+  /// Shows add media options sheet based on current tab
+  static void showAddMediaSheet(BuildContext context, Function(String, bool) onAddMedia, {required String currentView}) {
     showModalBottomSheet(
       context: context,
       builder: (context) => Column(
@@ -248,76 +248,151 @@ class MediaDialogs {
             ),
           ),
           const Divider(),
-          GridView.count(
-            shrinkWrap: true,
-            crossAxisCount: 4,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            children: [
-              _buildAddMediaOption(
-                icon: Icons.photo_camera,
-                label: 'Take Photo',
-                onTap: () {
-                  Navigator.pop(context);
-                  onAddMedia('photo', true);
-                },
-              ),
-              _buildAddMediaOption(
-                icon: Icons.photo_library,
-                label: 'Gallery',
-                onTap: () {
-                  Navigator.pop(context);
-                  onAddMedia('photo', false);
-                },
-              ),
-              _buildAddMediaOption(
-                icon: Icons.videocam,
-                label: 'Record Video',
-                onTap: () {
-                  Navigator.pop(context);
-                  onAddMedia('video', true);
-                },
-              ),
-              _buildAddMediaOption(
-                icon: Icons.video_library,
-                label: 'Video Library',
-                onTap: () {
-                  Navigator.pop(context);
-                  onAddMedia('video', false);
-                },
-              ),
-              _buildAddMediaOption(
-                icon: Icons.mic,
-                label: 'Record Audio',
-                onTap: () {
-                  Navigator.pop(context);
-                  onAddMedia('audio', true);
-                },
-              ),
-              _buildAddMediaOption(
-                icon: Icons.text_snippet,
-                label: 'Text Note',
-                onTap: () {
-                  Navigator.pop(context);
-                  onAddMedia('text', false);
-                },
-              ),
-              _buildAddMediaOption(
-                icon: Icons.note_add,
-                label: 'Setlist',
-                onTap: () {
-                  Navigator.pop(context);
-                  onAddMedia('setlist', false);
-                },
-              ),
-              _buildAddMediaOption(
-                icon: Icons.location_on,
-                label: 'Venue Info',
-                onTap: () {
-                  Navigator.pop(context);
-                  onAddMedia('location', false);
-                },
-              ),
-            ],
+          // Different options for timeline view vs other views
+          Flexible(
+            child: currentView == 'timeline'
+              ? GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 4,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  children: [
+                    _buildAddMediaOption(
+                      icon: Icons.photo_camera,
+                      label: 'Take Photo',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('photo', true);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.photo_library,
+                      label: 'Gallery',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('photo', false);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.videocam,
+                      label: 'Record Video',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('video', true);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.mic,
+                      label: 'Record Audio',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('audio', true);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.text_snippet,
+                      label: 'Text Note',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('text', false);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.auto_fix_high,
+                      label: 'Add Effects',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('effects', false);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.filter,
+                      label: 'Add Filters',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('filters', false);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.emoji_emotions,
+                      label: 'Add Stickers',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('stickers', false);
+                      },
+                    ),
+                  ],
+                )
+              : GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 4,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  children: [
+                    _buildAddMediaOption(
+                      icon: Icons.photo_camera,
+                      label: 'Take Photo',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('photo', true);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.photo_library,
+                      label: 'Gallery',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('photo', false);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.videocam,
+                      label: 'Record Video',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('video', true);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.video_library,
+                      label: 'Video Library',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('video', false);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.mic,
+                      label: 'Record Audio',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('audio', true);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.text_snippet,
+                      label: 'Text Note',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('text', false);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.note_add,
+                      label: 'Setlist',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('setlist', false);
+                      },
+                    ),
+                    _buildAddMediaOption(
+                      icon: Icons.location_on,
+                      label: 'Venue Info',
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddMedia('location', false);
+                      },
+                    ),
+                  ],
+                ),
           ),
           const SizedBox(height: 16),
         ],

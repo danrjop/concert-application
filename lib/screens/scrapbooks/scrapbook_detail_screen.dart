@@ -205,11 +205,17 @@ class _ScrapbookDetailScreenState extends State<ScrapbookDetailScreen> with Tick
 
   /// Shows media addition options
   void _showAddMediaSheet() {
-    MediaDialogs.showAddMediaSheet(context, _addMedia);
+    MediaDialogs.showAddMediaSheet(context, _addMedia, currentView: _currentView);
   }
   
   /// Handle adding media of a specific type
   void _addMedia(String type, bool capture) {
+    // For timeline view's camera/video/audio options, show record overlay
+    if (_currentView == 'timeline' && (type == 'photo' || type == 'video' || type == 'audio') && capture) {
+      _showRecordScreenOverlay(type);
+      return;
+    }
+    
     // Mock implementation - in a real app, this would use camera/media plugins
     setState(() {
       final newId = 'media_${DateTime.now().millisecondsSinceEpoch}';
@@ -266,6 +272,14 @@ class _ScrapbookDetailScreenState extends State<ScrapbookDetailScreen> with Tick
             section: 'post-show',
           );
           break;
+        case 'effects':
+        case 'filters':
+        case 'stickers':
+          // For timeline-specific options, show a message for now
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('$type feature would be applied to the selected media')),
+          );
+          return;
         default:
           // For other types, show a placeholder message
           ScaffoldMessenger.of(context).showSnackBar(
@@ -279,6 +293,145 @@ class _ScrapbookDetailScreenState extends State<ScrapbookDetailScreen> with Tick
     
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('New media added to scrapbook')),
+    );
+  }
+  
+  /// Shows a record screen overlay for timeline view media capture
+  void _showRecordScreenOverlay(String mediaType) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
+          insetPadding: EdgeInsets.zero,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.black,
+            child: Stack(
+              children: [
+                // Mock camera/recording UI
+                Center(
+                  child: Icon(
+                    mediaType == 'photo' ? Icons.camera_alt :
+                    mediaType == 'video' ? Icons.videocam :
+                    Icons.mic,
+                    size: 100,
+                    color: Colors.white.withOpacity(0.5),
+                  ),
+                ),
+                
+                // Bottom controls
+                Positioned(
+                  bottom: 40,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    children: [
+                      // Record button
+                      GestureDetector(
+                        onTap: () {
+                          // Simulate capture
+                          Navigator.pop(context);
+                          
+                          // Add the captured media
+                          final newId = 'media_${DateTime.now().millisecondsSinceEpoch}';
+                          final now = DateTime.now();
+                          
+                          ScrapbookMedia newMedia;
+                          switch (mediaType) {
+                            case 'photo':
+                              newMedia = ScrapbookMedia(
+                                id: newId,
+                                type: 'photo',
+                                url: 'assets/images/concert_placeholder.jpg',
+                                caption: 'Photo from timeline',
+                                timestamp: now,
+                                tags: ['timeline', 'photo'],
+                                section: 'main-show',
+                              );
+                              break;
+                            case 'video':
+                              newMedia = ScrapbookMedia(
+                                id: newId,
+                                type: 'video',
+                                url: 'assets/videos/video_placeholder.mp4',
+                                caption: 'Video from timeline',
+                                timestamp: now,
+                                tags: ['timeline', 'video'],
+                                section: 'main-show',
+                                duration: const Duration(seconds: 15),
+                              );
+                              break;
+                            case 'audio':
+                              newMedia = ScrapbookMedia(
+                                id: newId,
+                                type: 'audio',
+                                url: 'assets/audio/audio_placeholder.mp3',
+                                caption: 'Audio from timeline',
+                                timestamp: now,
+                                tags: ['timeline', 'audio'],
+                                section: 'main-show',
+                                duration: const Duration(seconds: 30),
+                              );
+                              break;
+                            default:
+                              return;
+                          }
+                          
+                          setState(() {
+                            _scrapbookMedia.add(newMedia);
+                          });
+                          
+                          // Show message about dragging capability
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Media added to timeline. Drag to position it or make it a background.'),
+                              duration: Duration(seconds: 4),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
+                            color: Colors.red.withOpacity(0.6),
+                          ),
+                          child: Icon(
+                            mediaType == 'photo' ? Icons.camera :
+                            mediaType == 'video' ? Icons.fiber_manual_record :
+                            Icons.mic,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // Cancel button
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

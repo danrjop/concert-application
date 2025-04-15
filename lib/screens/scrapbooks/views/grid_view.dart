@@ -70,7 +70,7 @@ class _GridMediaViewState extends State<GridMediaView> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Adding new $type media from ${capture ? "camera" : "gallery"}')),
       );
-    });
+    }, currentView: 'grid');
   }
 
   @override
